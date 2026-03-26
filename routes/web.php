@@ -15,6 +15,7 @@ Route::get('/api/sessions/{journeySession}', [JourneySessionController::class, '
 Route::patch('/api/sessions/{journeySession}', [JourneySessionController::class, 'update'])->name('sessions.update');
 Route::post('/api/sessions/{journeySession}/persona', [JourneySessionController::class, 'setPersona'])->name('sessions.persona');
 
-// Commentary API
+// Commentary API (SSE stream + DB persistence)
 Route::post('/api/sessions/{journeySession}/commentaries', [CommentaryController::class, 'store'])->name('commentaries.store');
 Route::get('/api/sessions/{journeySession}/commentaries/{commentary}', [CommentaryController::class, 'show'])->name('commentaries.show');
+Route::get('/api/sessions/{journeySession}/cards/{quizCard}/commentary', [CommentaryController::class, 'latest'])->name('commentaries.latest');

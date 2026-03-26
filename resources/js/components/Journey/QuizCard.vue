@@ -1,23 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, nextTick, watch } from 'vue';
+import { ref, computed, nextTick } from 'vue';
+import { useCompletion } from '@ai-sdk/vue';
 import { X, Check, ExternalLink, ChevronRight, Calendar, Sparkles } from 'lucide-vue-next';
-import { useTypewriter } from '@/composables/useTypewriter';
 
 const props = defineProps<{
     card: App.Data.QuizCardData;
-    commentaryText: string | null;
-    commentaryLoading: boolean;
+    sessionId: string | null;
     showWeiterButton: boolean;
 }>();
-
-const typewriter = useTypewriter(20);
-
-watch(
-    () => props.commentaryText,
-    (text) => {
-        if (text) typewriter.start(text);
-    },
-);
 
 const emit = defineEmits<{
     answered: [userSaidReal: boolean];
@@ -52,20 +42,46 @@ const fakePhrases = [
     'Pure Erfindung. Vorerst.',
 ];
 
-function pickRandom(arr: string[]): string {
-    return arr[Math.floor(Math.random() * arr.length)];
+const revealHeadline = ref('');
+
+function getXsrfToken(): string {
+    return document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1]
+        ?.replace(/%3D/g, '=') ?? '';
 }
 
-const revealHeadline = computed(() => {
-    if (userAnswer.value === null) return '';
-    return props.card.is_real ? pickRandom(realPhrases) : pickRandom(fakePhrases);
+const { completion, isLoading: commentaryLoading, complete } = useCompletion({
+    api: computed(() =>
+        props.sessionId
+            ? `/api/sessions/${props.sessionId}/commentaries`
+            : '/api/sessions/none/commentaries',
+    ).value,
+    headers: () => ({
+        'X-XSRF-TOKEN': getXsrfToken(),
+        'X-Requested-With': 'XMLHttpRequest',
+    }),
 });
 
 function answer(saidReal: boolean) {
     if (revealed.value) return;
     userAnswer.value = saidReal;
     revealed.value = true;
+
+    const phrases = props.card.is_real ? realPhrases : fakePhrases;
+    revealHeadline.value = phrases[Math.floor(Math.random() * phrases.length)];
+
     emit('answered', saidReal);
+
+    // Stream commentary
+    if (props.sessionId) {
+        complete('Kommentiere diese Quiz-Antwort.', {
+            body: {
+                quiz_card_id: props.card.id,
+            },
+        });
+    }
 
     nextTick(() => {
         revealEl.value?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -75,7 +91,6 @@ function answer(saidReal: boolean) {
 
 <template>
     <div class="flex min-h-0 flex-1 flex-col">
-        <!-- Card -->
         <div class="flex-1 overflow-y-auto px-5 pb-4">
             <div class="rounded-2xl bg-white shadow-sm ring-1 ring-black/[0.04] dark:bg-[#1c1c1e] dark:ring-white/[0.06]">
                 <div class="p-6">
@@ -112,12 +127,12 @@ function answer(saidReal: boolean) {
                                 {{ revealHeadline }}
                             </p>
 
-                            <!-- AI Commentary (polled + typewriter) -->
-                            <div v-if="typewriter.displayed.value || commentaryLoading" class="mb-4 flex items-start gap-2">
+                            <!-- AI Commentary (SSE streamed) -->
+                            <div v-if="completion || commentaryLoading" class="mb-4 flex items-start gap-2">
                                 <Sparkles class="mt-0.5 h-4 w-4 shrink-0 text-[#007aff] opacity-60" />
                                 <p class="text-[14px] leading-[1.5] text-[#86868b] italic dark:text-[#98989d]">
-                                    {{ typewriter.displayed.value }}<span
-                                        v-if="commentaryLoading || typewriter.isTyping.value"
+                                    {{ completion }}<span
+                                        v-if="commentaryLoading"
                                         class="ml-0.5 inline-block h-[14px] w-[2px] animate-pulse bg-[#007aff]"
                                     />
                                 </p>
@@ -151,7 +166,7 @@ function answer(saidReal: boolean) {
                     <Check class="h-5 w-5" /> Echt passiert
                 </button>
             </div>
-            <div v-else-if="showWeiterButton">
+            <div v-else-if="showWeiterButton && !commentaryLoading">
                 <button class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#007aff] px-4 py-4 text-[17px] font-semibold tracking-[-0.2px] text-white transition-all active:scale-[0.97]" @click="$emit('next')">
                     Weiter <ChevronRight class="h-5 w-5" />
                 </button>

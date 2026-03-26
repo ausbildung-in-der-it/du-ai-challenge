@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { Play, RotateCcw, Zap } from 'lucide-vue-next';
+import { RotateCcw, Zap } from 'lucide-vue-next';
 import QuizCard from './QuizCard.vue';
 import LearnCard from './LearnCard.vue';
 import PersonaInterstitial from './PersonaInterstitial.vue';
 import PromptReveal from './PromptReveal.vue';
 import { useJourneySession } from '@/composables/useJourneySession';
-import { useCommentaryPoll } from '@/composables/useCommentaryPoll';
+import { useCompletion } from '@ai-sdk/vue';
+import { useTypewriter } from '@/composables/useTypewriter';
 
 const props = defineProps<{
     journey: App.Data.LearningJourneyData;
@@ -16,20 +17,39 @@ type Screen = 'loading' | 'start' | 'journey' | 'persona' | 'prompt-reveal' | 'e
 
 const screen = ref<Screen>('loading');
 const session = useJourneySession(props.journey);
-const commentary = useCommentaryPoll();
-const styledCommentary = useCommentaryPoll();
-
-// Show "Weiter" only when commentary is done AND no persona interstitial pending
-const showWeiterOnQuiz = computed(() => {
-    if (commentary.isLoading.value) return false;
-    // After first quiz answer, before persona is shown → don't show Weiter
-    if (session.answeredQuizCount.value === 1 && !session.personaPromptShown.value) {
-        return !commentary.isLoading.value && !!commentary.text.value;
-    }
-    return !!commentary.text.value;
-});
 
 const currentBlock = computed(() => props.journey.blocks[session.currentBlock.value]);
+
+// For the persona styled commentary on PromptReveal
+function getXsrfToken(): string {
+    return document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1]
+        ?.replace(/%3D/g, '=') ?? '';
+}
+
+const styledCompletion = useCompletion({
+    api: computed(() =>
+        session.sessionId.value
+            ? `/api/sessions/${session.sessionId.value}/commentaries`
+            : '/api/sessions/_/commentaries',
+    ).value,
+    headers: () => ({
+        'X-XSRF-TOKEN': getXsrfToken(),
+        'X-Requested-With': 'XMLHttpRequest',
+    }),
+});
+
+const promptText = ref<string | null>(null);
+const promptTypewriter = useTypewriter(8);
+
+// "Weiter" on quiz: always show (streaming handles its own loading state)
+const showWeiterOnQuiz = computed(() => {
+    // After first quiz, before persona shown → show Weiter (goes to persona)
+    // Otherwise → always show (commentary streams independently)
+    return true;
+});
 
 onMounted(async () => {
     const resumed = await session.resumeSession();
@@ -53,15 +73,6 @@ async function onQuizAnswered(userSaidReal: boolean) {
     const card = block.quiz_cards[session.currentItem.value];
     session.recordAnswer(card.id, userSaidReal, card.is_real);
     await session.saveProgress();
-
-    // Request commentary
-    if (session.sessionId.value) {
-        await commentary.requestCommentary(
-            session.sessionId.value,
-            card.id,
-            session.personaStyle.value,
-        );
-    }
 }
 
 function onQuizNext() {
@@ -76,15 +87,39 @@ function onQuizNext() {
 async function onPersonaSet(style: string) {
     await session.setPersona(style);
 
-    // Request styled commentary for the SAME card
+    // Fetch the prompt that WILL be used
     const block = currentBlock.value;
     if (block?.type === 'quiz' && session.sessionId.value) {
         const card = block.quiz_cards[session.currentItem.value];
-        await styledCommentary.requestCommentary(
-            session.sessionId.value,
-            card.id,
-            style,
-        );
+
+        // Stream styled commentary
+        styledCompletion.complete('Kommentiere diese Quiz-Antwort.', {
+            body: {
+                quiz_card_id: card.id,
+                persona_style: style,
+            },
+        });
+
+        // Fetch prompt from latest commentary
+        setTimeout(async () => {
+            try {
+                const res = await fetch(
+                    `/api/sessions/${session.sessionId.value}/cards/${card.id}/commentary`,
+                    {
+                        headers: {
+                            Accept: 'application/json',
+                            'X-XSRF-TOKEN': getXsrfToken(),
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                    },
+                );
+                if (res.ok) {
+                    const data = await res.json();
+                    promptText.value = data.prompt_used;
+                    if (data.prompt_used) promptTypewriter.start(data.prompt_used);
+                }
+            } catch { /* prompt display is nice-to-have */ }
+        }, 1000);
     }
 
     screen.value = 'prompt-reveal';
@@ -96,12 +131,11 @@ function onPersonaSkip() {
 }
 
 function onPromptRevealNext() {
-    styledCommentary.reset();
+    promptText.value = null;
     advanceToNext();
 }
 
 async function advanceToNext() {
-    commentary.reset();
     const result = await session.advance();
     if (result === 'end') {
         screen.value = 'end';
@@ -131,12 +165,12 @@ const endMessage = computed(() => {
 
 <template>
     <div class="flex h-dvh flex-col bg-[#f5f5f7] font-sans dark:bg-black">
-        <!-- ===== LOADING ===== -->
+        <!-- LOADING -->
         <div v-if="screen === 'loading'" class="flex flex-1 items-center justify-center">
             <div class="h-6 w-6 animate-spin rounded-full border-2 border-[#007aff] border-t-transparent" />
         </div>
 
-        <!-- ===== START SCREEN (Apple style) ===== -->
+        <!-- START -->
         <div v-else-if="screen === 'start'" class="flex flex-1 flex-col items-center justify-center px-8 text-center">
             <div class="mb-8 flex h-20 w-20 items-center justify-center rounded-[22px] bg-gradient-to-b from-[#007aff] to-[#0055d4] shadow-lg shadow-[#007aff]/25">
                 <Zap class="h-10 w-10 text-white" />
@@ -148,7 +182,7 @@ const endMessage = computed(() => {
                 {{ journey.description }}
             </p>
             <p class="mb-10 text-[13px] text-[#86868b]/60 dark:text-[#98989d]/60">
-                {{ session.totalSteps.value }} Schritte · ~5 Minuten
+                {{ session.totalSteps.value }} Schritte
             </p>
             <button
                 class="flex cursor-pointer items-center gap-2.5 rounded-full bg-[#007aff] px-10 py-4 text-[17px] font-semibold tracking-[-0.2px] text-white shadow-lg shadow-[#007aff]/25 transition-all active:scale-[0.97]"
@@ -158,7 +192,7 @@ const endMessage = computed(() => {
             </button>
         </div>
 
-        <!-- ===== JOURNEY SCREEN ===== -->
+        <!-- JOURNEY -->
         <template v-else-if="screen === 'journey' && currentBlock">
             <header class="flex shrink-0 items-center justify-between px-5 pt-4 pb-3">
                 <span class="text-[17px] font-semibold tracking-[-0.2px] text-[#1d1d1f] dark:text-[#f5f5f7]">
@@ -186,8 +220,7 @@ const endMessage = computed(() => {
                     v-if="currentBlock.type === 'quiz'"
                     :key="`quiz-${session.currentBlock.value}-${session.currentItem.value}`"
                     :card="currentBlock.quiz_cards[session.currentItem.value]"
-                    :commentary-text="commentary.text.value"
-                    :commentary-loading="commentary.isLoading.value"
+                    :session-id="session.sessionId.value"
                     :show-weiter-button="showWeiterOnQuiz"
                     @answered="onQuizAnswered"
                     @next="onQuizNext"
@@ -201,7 +234,7 @@ const endMessage = computed(() => {
             </Transition>
         </template>
 
-        <!-- ===== PERSONA INTERSTITIAL ===== -->
+        <!-- PERSONA -->
         <template v-else-if="screen === 'persona'">
             <header class="flex shrink-0 items-center justify-between px-5 pt-4 pb-3">
                 <span class="text-[17px] font-semibold tracking-[-0.2px] text-[#1d1d1f] dark:text-[#f5f5f7]">
@@ -211,7 +244,7 @@ const endMessage = computed(() => {
             <PersonaInterstitial @set-persona="onPersonaSet" @skip="onPersonaSkip" />
         </template>
 
-        <!-- ===== PROMPT REVEAL ===== -->
+        <!-- PROMPT REVEAL -->
         <template v-else-if="screen === 'prompt-reveal'">
             <header class="flex shrink-0 items-center justify-between px-5 pt-4 pb-3">
                 <span class="text-[17px] font-semibold tracking-[-0.2px] text-[#1d1d1f] dark:text-[#f5f5f7]">
@@ -219,14 +252,14 @@ const endMessage = computed(() => {
                 </span>
             </header>
             <PromptReveal
-                :prompt-used="styledCommentary.promptUsed.value"
-                :commentary-text="styledCommentary.text.value"
-                :is-loading="styledCommentary.isLoading.value"
+                :prompt-used="promptText"
+                :commentary-text="styledCompletion.completion.value"
+                :is-loading="styledCompletion.isLoading.value"
                 @next="onPromptRevealNext"
             />
         </template>
 
-        <!-- ===== END SCREEN ===== -->
+        <!-- END -->
         <div v-else-if="screen === 'end'" class="flex flex-1 flex-col items-center justify-center px-8 text-center">
             <div v-if="session.totalQuizCards.value > 0" class="mb-6 flex h-36 w-36 flex-col items-center justify-center rounded-full border-[6px] border-[#007aff]">
                 <span class="text-[42px] leading-none font-extrabold text-[#007aff]">
