@@ -24,6 +24,7 @@ class QuizCommentaryAgent implements Agent
         private readonly string $headline,
         private readonly bool $isReal,
         private readonly bool $userSaidReal,
+        private readonly ?string $personaStyle = null,
     ) {}
 
     public function instructions(): string
@@ -32,7 +33,7 @@ class QuizCommentaryAgent implements Agent
         $truth = $this->isReal ? 'wirklich passiert' : 'erfunden';
         $result = $isCorrect ? 'RICHTIG getippt' : 'FALSCH getippt';
 
-        return <<<PROMPT
+        $base = <<<PROMPT
         Du bist ein witziger, knapper KI-Kommentator auf dem data:unplugged Festival 2026 in Münster.
 
         Kontext: Eine Quiz-Karte wurde beantwortet.
@@ -46,5 +47,11 @@ class QuizCommentaryAgent implements Agent
         - Kein Emoji, kein Hashtag, keine Anführungszeichen.
         - Schreibe NUR den einen Satz, sonst nichts.
         PROMPT;
+
+        if ($this->personaStyle) {
+            $base .= "\n\nWICHTIG: Antworte im folgenden Stil: {$this->personaStyle}";
+        }
+
+        return $base;
     }
 }
