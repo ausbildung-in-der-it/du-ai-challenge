@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, nextTick, watch } from 'vue';
 import { X, Check, ExternalLink, ChevronRight, Calendar, Sparkles } from 'lucide-vue-next';
+import { useTypewriter } from '@/composables/useTypewriter';
 
 const props = defineProps<{
     card: App.Data.QuizCardData;
@@ -8,6 +9,15 @@ const props = defineProps<{
     commentaryLoading: boolean;
     showWeiterButton: boolean;
 }>();
+
+const typewriter = useTypewriter(20);
+
+watch(
+    () => props.commentaryText,
+    (text) => {
+        if (text) typewriter.start(text);
+    },
+);
 
 const emit = defineEmits<{
     answered: [userSaidReal: boolean];
@@ -84,11 +94,14 @@ function answer(saidReal: boolean) {
                                 {{ hardcodedLine }}
                             </p>
 
-                            <!-- AI Commentary (polled) -->
-                            <div v-if="commentaryText || commentaryLoading" class="mb-4 flex items-start gap-2">
+                            <!-- AI Commentary (polled + typewriter) -->
+                            <div v-if="typewriter.displayed.value || commentaryLoading" class="mb-4 flex items-start gap-2">
                                 <Sparkles class="mt-0.5 h-4 w-4 shrink-0 text-[#007aff] opacity-60" />
                                 <p class="text-[14px] leading-[1.5] text-[#86868b] italic dark:text-[#98989d]">
-                                    {{ commentaryText }}<span v-if="commentaryLoading" class="ml-0.5 inline-block h-[14px] w-[2px] animate-pulse bg-[#007aff]" />
+                                    {{ typewriter.displayed.value }}<span
+                                        v-if="commentaryLoading || typewriter.isTyping.value"
+                                        class="ml-0.5 inline-block h-[14px] w-[2px] animate-pulse bg-[#007aff]"
+                                    />
                                 </p>
                             </div>
 
