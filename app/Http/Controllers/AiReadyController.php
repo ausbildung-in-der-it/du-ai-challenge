@@ -24,14 +24,10 @@ class AiReadyController extends Controller
             'mode' => 'payment',
             'success_url' => route('ai-ready.success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('ai-ready'),
+            'automatic_tax' => ['enabled' => true],
             'billing_address_collection' => 'required',
             'tax_id_collection' => ['enabled' => true],
             'invoice_creation' => ['enabled' => true],
-            'custom_fields' => [[
-                'key' => 'company',
-                'label' => ['type' => 'custom', 'custom' => 'Firma'],
-                'type' => 'text',
-            ]],
             'metadata' => [
                 'product' => 'ai_ready_early_access',
             ],

@@ -1,9 +1,16 @@
 import { ref } from 'vue';
 
 /**
- * Manual SSE stream reader for Vercel AI SDK data protocol.
- * Unlike useCompletion, the URL is passed at call time (not init),
- * so it works with dynamic session IDs.
+ * Manual SSE stream reader for Laravel AI SDK format.
+ *
+ * The actual wire format from Laravel AI SDK (non-Vercel) is:
+ *   data: {"type":"text-delta","id":"...","delta":"chunk"}
+ *   data: {"type":"finish"}
+ *   data: [DONE]
+ *
+ * Vercel data protocol (when usingVercelDataProtocol):
+ *   0:"chunk"
+ *   e:{"finishReason":"stop"}
  */
 export function useStreamText() {
     const text = ref('');
@@ -20,7 +27,10 @@ export function useStreamText() {
         );
     }
 
-    async function stream(url: string, body: Record<string, unknown>): Promise<string> {
+    async function stream(
+        url: string,
+        body: Record<string, unknown>,
+    ): Promise<string> {
         text.value = '';
         error.value = null;
         isLoading.value = true;
@@ -57,26 +67,43 @@ export function useStreamText() {
                 buffer = lines.pop() ?? '';
 
                 for (const line of lines) {
-                    // Vercel data protocol: 0:"text chunk"
-                    if (line.startsWith('0:')) {
+                    const trimmed = line.trim();
+                    if (!trimmed) continue;
+
+                    // Vercel protocol: 0:"chunk"
+                    if (trimmed.startsWith('0:')) {
                         try {
-                            const chunk = JSON.parse(line.slice(2));
+                            const chunk = JSON.parse(trimmed.slice(2));
                             if (typeof chunk === 'string') {
                                 text.value += chunk;
                             }
                         } catch {
-                            // not JSON, skip
+                            /* skip */
                         }
+                        continue;
                     }
-                    // SSE format: data: {"event":"text_delta","data":"chunk"}
-                    else if (line.startsWith('data: ') && !line.includes('[DONE]')) {
+
+                    // Laravel AI SDK SSE: data: {"type":"text-delta","delta":"chunk"}
+                    if (trimmed.startsWith('data: ')) {
+                        const payload = trimmed.slice(6);
+                        if (payload === '[DONE]') continue;
+
                         try {
-                            const event = JSON.parse(line.slice(6));
-                            if (event.event === 'text_delta' && event.data) {
+                            const event = JSON.parse(payload);
+
+                            // Laravel AI SDK format
+                            if (event.type === 'text-delta' && event.delta) {
+                                text.value += event.delta;
+                            }
+                            // Alternative: plain event format
+                            else if (
+                                event.event === 'text_delta' &&
+                                event.data
+                            ) {
                                 text.value += event.data;
                             }
                         } catch {
-                            // not JSON event, skip
+                            /* skip non-JSON lines */
                         }
                     }
                 }

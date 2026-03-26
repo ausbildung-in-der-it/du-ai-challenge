@@ -19,6 +19,7 @@ const revealed = ref(false);
 const userAnswer = ref<boolean | null>(null);
 const revealEl = ref<HTMLElement | null>(null);
 const commentary = useStreamText();
+const commentaryRequested = ref(false);
 
 const isCorrect = computed(() => userAnswer.value === props.card.is_real);
 
@@ -58,6 +59,7 @@ async function answer(saidReal: boolean) {
 
     // Stream commentary with dynamic URL
     if (props.sessionId) {
+        commentaryRequested.value = true;
         const result = await commentary.stream(
             `/api/sessions/${props.sessionId}/commentaries`,
             { quiz_card_id: props.card.id },
@@ -106,11 +108,11 @@ async function answer(saidReal: boolean) {
                             </p>
 
                             <!-- AI Commentary (SSE streamed) -->
-                            <div v-if="commentary.text.value || commentary.isLoading.value" class="mb-4 flex items-start gap-2">
+                            <div v-if="commentaryRequested" class="mb-4 flex items-start gap-2">
                                 <Sparkles class="mt-0.5 h-4 w-4 shrink-0 text-[#007aff] opacity-60" />
                                 <p class="text-[14px] leading-[1.5] text-[#86868b] italic dark:text-[#98989d]">
                                     {{ commentary.text.value }}<span
-                                        v-if="commentary.isLoading.value"
+                                        v-if="commentary.isLoading.value || !commentary.text.value"
                                         class="ml-0.5 inline-block h-[14px] w-[2px] animate-pulse bg-[#007aff]"
                                     />
                                 </p>

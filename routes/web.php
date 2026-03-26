@@ -9,6 +9,7 @@ use App\Models\LearningJourney;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
+Route::redirect('/challenge', '/journey/real-or-fake');
 
 // AI Ready Funnel
 Route::get('/ai-ready', [AiReadyController::class, 'index'])->name('ai-ready');
