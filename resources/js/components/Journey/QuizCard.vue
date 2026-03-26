@@ -30,10 +30,35 @@ const revealEl = ref<HTMLElement | null>(null);
 
 const isCorrect = computed(() => userAnswer.value === props.card.is_real);
 
-const hardcodedLine = computed(() => {
+const realPhrases = [
+    'Das ist tatsächlich so passiert.',
+    'Kein Witz — das ist real.',
+    'So geschehen. Wirklich.',
+    'Ja, das ist echt.',
+    'Willkommen in der Realität.',
+    'Klingt verrückt, ist aber wahr.',
+    'Die Realität übertrifft jede Fiktion.',
+    'Das hat sich so zugetragen.',
+];
+
+const fakePhrases = [
+    'Das ist zum Glück nicht passiert.',
+    'Nein — das haben wir erfunden.',
+    'Frei erfunden. Dieses Mal.',
+    'Das war ausgedacht.',
+    'Noch ist das Fiktion.',
+    'Gut erkannt — oder auch nicht.',
+    'Das ist nicht wahr. Noch nicht.',
+    'Pure Erfindung. Vorerst.',
+];
+
+function pickRandom(arr: string[]): string {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+const revealHeadline = computed(() => {
     if (userAnswer.value === null) return '';
-    if (props.card.is_real) return 'Das ist tatsächlich so passiert.';
-    return 'Das ist zum Glück nicht passiert.';
+    return props.card.is_real ? pickRandom(realPhrases) : pickRandom(fakePhrases);
 });
 
 function answer(saidReal: boolean) {
@@ -78,20 +103,13 @@ function answer(saidReal: boolean) {
                         enter-to-class="opacity-100 translate-y-0"
                     >
                         <div v-if="revealed" ref="revealEl" class="mt-5 border-t border-black/[0.06] pt-5 dark:border-white/[0.08]">
-                            <span :class="['mb-3 inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[13px] font-semibold', isCorrect ? 'bg-[#34c759]/10 text-[#34c759]' : 'bg-[#ff3b30]/10 text-[#ff3b30]']">
-                                <Check v-if="isCorrect" class="h-3.5 w-3.5" />
-                                <X v-else class="h-3.5 w-3.5" />
-                                {{ isCorrect ? 'Richtig!' : 'Falsch!' }}
-                            </span>
-
-                            <div :class="['mb-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[15px] font-bold', card.is_real ? 'bg-[#34c759]/10 text-[#34c759]' : 'bg-[#ff3b30]/10 text-[#ff3b30]']">
-                                <Check v-if="card.is_real" class="h-[18px] w-[18px]" />
-                                <X v-else class="h-[18px] w-[18px]" />
-                                {{ card.is_real ? 'Echt passiert' : 'Erfunden' }}
-                            </div>
-
-                            <p class="mb-2 text-[15px] font-medium text-[#1d1d1f] dark:text-[#f5f5f7]">
-                                {{ hardcodedLine }}
+                            <p
+                                :class="[
+                                    'mb-3 text-[18px] leading-[1.3] font-bold tracking-[-0.3px]',
+                                    card.is_real ? 'text-[#34c759]' : 'text-[#ff3b30]',
+                                ]"
+                            >
+                                {{ revealHeadline }}
                             </p>
 
                             <!-- AI Commentary (polled + typewriter) -->
