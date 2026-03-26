@@ -12,6 +12,8 @@ class JourneyBlockData extends Data
         public int $id,
         public string $type,
         public int $position,
+        /** @var array<string, mixed>|null */
+        public ?array $config,
         /** @var QuizCardData[] */
         public array $quiz_cards,
         /** @var LearnCardData[] */

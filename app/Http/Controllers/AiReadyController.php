@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Laravel\Cashier\Cashier;
 
@@ -36,8 +37,26 @@ class AiReadyController extends Controller
         return Inertia::location($session->url);
     }
 
-    public function success()
+    public function success(Request $request)
     {
-        return Inertia::render('AiReady/Danke');
+        $sessionId = $request->query('session_id');
+
+        if (! $sessionId) {
+            return redirect()->route('ai-ready');
+        }
+
+        try {
+            $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
+
+            if ($session->payment_status !== 'paid') {
+                return redirect()->route('ai-ready');
+            }
+        } catch (\Exception) {
+            return redirect()->route('ai-ready');
+        }
+
+        return Inertia::render('AiReady/Danke', [
+            'customerEmail' => $session->customer_details?->email,
+        ]);
     }
 }

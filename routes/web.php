@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AiCompareController;
 use App\Http\Controllers\AiReadyController;
 use App\Http\Controllers\CommentaryController;
 use App\Http\Controllers\JourneyController;
@@ -28,6 +29,9 @@ Route::post('/api/sessions/{journeySession}/persona', [JourneySessionController:
 Route::post('/api/sessions/{journeySession}/commentaries', [CommentaryController::class, 'store'])->name('commentaries.store');
 Route::get('/api/sessions/{journeySession}/commentaries/{commentary}', [CommentaryController::class, 'show'])->name('commentaries.show');
 Route::get('/api/sessions/{journeySession}/cards/{quizCard}/commentary', [CommentaryController::class, 'latest'])->name('commentaries.latest');
+
+// AI Compare (multi-provider evaluation)
+Route::post('/api/ai-compare/stream', [AiCompareController::class, 'stream'])->name('ai-compare.stream');
 
 // Dev: reset all sessions for a journey
 Route::get('/journey/{journey:slug}/reset', function (LearningJourney $journey) {

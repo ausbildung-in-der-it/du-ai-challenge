@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import { ArrowRight, RotateCcw, Zap } from 'lucide-vue-next';
 import QuizCard from './QuizCard.vue';
 import LearnCard from './LearnCard.vue';
+import AiCompareBlock from './AiCompareBlock.vue';
 import PersonaInterstitial from './PersonaInterstitial.vue';
 import PromptReveal from './PromptReveal.vue';
 import { useJourneySession } from '@/composables/useJourneySession';
@@ -215,6 +216,14 @@ const endMessage = computed(() => {
                     v-else-if="currentBlock.type === 'learn'"
                     :key="`learn-${session.currentBlock.value}-${session.currentItem.value}`"
                     :card="currentBlock.learn_cards[session.currentItem.value]"
+                    @next="advanceToNext"
+                />
+                <AiCompareBlock
+                    v-else-if="currentBlock.type === 'compare'"
+                    :key="`compare-${session.currentBlock.value}`"
+                    :quiz-card-id="currentBlock.config?.quiz_card_id ?? 0"
+                    :headline="currentBlock.config?.headline ?? ''"
+                    :is-real="currentBlock.config?.is_real ?? true"
                     @next="advanceToNext"
                 />
             </Transition>

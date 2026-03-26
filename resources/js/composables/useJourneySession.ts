@@ -53,20 +53,20 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
     const personaPromptShown = ref(false);
     const loading = ref(false);
 
+    function blockItemCount(block: App.Data.JourneyBlockData): number {
+        if (block.type === 'quiz') return block.quiz_cards.length;
+        if (block.type === 'learn') return block.learn_cards.length;
+        return 1; // compare, prompt, or any custom block = 1 step
+    }
+
     const totalSteps = computed(() =>
-        journey.blocks.reduce((sum, block) => {
-            if (block.type === 'quiz') return sum + block.quiz_cards.length;
-            if (block.type === 'learn') return sum + block.learn_cards.length;
-            return sum;
-        }, 0),
+        journey.blocks.reduce((sum, block) => sum + blockItemCount(block), 0),
     );
 
     const currentStep = computed(() => {
         let step = 0;
         for (let i = 0; i < currentBlock.value; i++) {
-            const b = journey.blocks[i];
-            if (b.type === 'quiz') step += b.quiz_cards.length;
-            if (b.type === 'learn') step += b.learn_cards.length;
+            step += blockItemCount(journey.blocks[i]);
         }
         return step + currentItem.value;
     });
@@ -177,8 +177,13 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
         const block = journey.blocks[currentBlock.value];
         if (!block) return 'end';
 
+        // Single-step blocks (compare, etc.) → always go to next block
         const items =
-            block.type === 'quiz' ? block.quiz_cards : block.learn_cards;
+            block.type === 'quiz'
+                ? block.quiz_cards
+                : block.type === 'learn'
+                  ? block.learn_cards
+                  : [null]; // compare/custom = 1 virtual item
 
         if (currentItem.value < items.length - 1) {
             currentItem.value++;

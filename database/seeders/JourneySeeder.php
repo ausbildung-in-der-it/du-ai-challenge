@@ -46,7 +46,7 @@ class JourneySeeder extends Seeder
             'position' => $pos++,
         ]);
 
-        QuizCard::create([
+        $mckinseyCard = QuizCard::create([
             'journey_block_id' => $block->id,
             'category' => 'März 2026',
             'headline' => 'McKinseys KI-Chatbot in 2 Stunden gehackt: 46 Millionen Nachrichten exponiert',
@@ -195,7 +195,21 @@ class JourneySeeder extends Seeder
         ]);
 
         // =====================================================
-        // BLOCK 5: Learn — KI rettet Leben
+        // BLOCK 5: Compare — Multi-Provider KI-Bewertung
+        // =====================================================
+        JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'compare',
+            'position' => $pos++,
+            'config' => [
+                'quiz_card_id' => $mckinseyCard->id,
+                'headline' => $mckinseyCard->headline,
+                'is_real' => $mckinseyCard->is_real,
+            ],
+        ]);
+
+        // =====================================================
+        // BLOCK 6: Learn — KI rettet Leben
         // =====================================================
         $block = JourneyBlock::create([
             'learning_journey_id' => $journey->id,

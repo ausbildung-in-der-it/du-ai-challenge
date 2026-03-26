@@ -4,6 +4,7 @@ declare namespace App {
             id: number;
             type: string;
             position: number;
+            config: Record<string, any> | null;
             quiz_cards: App.Data.QuizCardData[];
             learn_cards: App.Data.LearnCardData[];
         };

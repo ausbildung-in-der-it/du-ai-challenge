@@ -30,6 +30,7 @@ class JourneyController extends Controller
                     id: $block->id,
                     type: $block->type,
                     position: $block->position,
+                    config: $block->config,
                     quiz_cards: $block->quizCards->map(fn ($card) => new QuizCardData(
                         id: $card->id,
                         category: $card->category,
