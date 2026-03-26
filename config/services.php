@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'ai_ready_price_id' => env('AI_READY_STRIPE_PRICE_ID'),
+    ],
+
 ];

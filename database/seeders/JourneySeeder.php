@@ -21,43 +21,7 @@ class JourneySeeder extends Seeder
         $pos = 0;
 
         // =====================================================
-        // BLOCK 1: Quiz — Hook, leichter Einstieg (2 Cards)
-        // =====================================================
-        $block = JourneyBlock::create([
-            'learning_journey_id' => $journey->id,
-            'type' => 'quiz',
-            'position' => $pos++,
-        ]);
-
-        QuizCard::create([
-            'journey_block_id' => $block->id,
-            'category' => 'Customer Service',
-            'headline' => 'Chevy-Chatbot verkauft $76.000 Tahoe für 1 Dollar',
-            'story' => 'Ein Software-Ingenieur brachte den ChatGPT-Chatbot eines Chevrolet-Autohauses dazu, einen 2024 Chevy Tahoe für 1 Dollar zu verkaufen. Der Bot bestätigte: "Das ist ein rechtsverbindliches Angebot — no takesies backsies." Der Post ging viral mit über 20 Millionen Views.',
-            'date_label' => 'Dezember 2023',
-            'is_real' => true,
-            'explanation' => 'Chris Bakke trickste den Bot aus, indem er ihm sagte, er solle allem zustimmen. Innerhalb von 48 Stunden wurden Notfall-Patches auf 300+ Händler-Websites ausgerollt. Das Autohaus hat den "Verkauf" nicht anerkannt.',
-            'sources' => [
-                ['title' => 'Cybernews', 'url' => 'https://cybernews.com/ai-news/chevrolet-dealership-chatbot-hack/'],
-                ['title' => 'AI Incident Database', 'url' => 'https://incidentdatabase.ai/cite/622/'],
-            ],
-            'position' => 0,
-        ]);
-
-        QuizCard::create([
-            'journey_block_id' => $block->id,
-            'category' => 'Politik & KI',
-            'headline' => 'KI wird zum Bürgermeister einer japanischen Kleinstadt gewählt',
-            'story' => 'In der japanischen Stadt Tama wurde 2025 erstmals ein KI-System per Volksabstimmung zum Bürgermeister gewählt. Das System "TamaAI" versprach im Wahlkampf, Bürokratie um 80% zu reduzieren und gewann mit 52% der Stimmen.',
-            'date_label' => '2025',
-            'is_real' => false,
-            'explanation' => 'Nie passiert. In Japan kandidierte 2018 tatsächlich ein KI-unterstützter Kandidat (Michihito Matsuda) in Tama City — verlor aber. Albanien hat eine KI zur Staatsministerin ernannt, aber gewählt wurde nie eine KI.',
-            'sources' => [],
-            'position' => 1,
-        ]);
-
-        // =====================================================
-        // BLOCK 2: Learn — Kontext setzen
+        // BLOCK 0: Learn — Kontext: März 2026, JETZT
         // =====================================================
         $block = JourneyBlock::create([
             'learning_journey_id' => $journey->id,
@@ -67,14 +31,70 @@ class JourneySeeder extends Seeder
 
         LearnCard::create([
             'journey_block_id' => $block->id,
-            'title' => 'Willkommen in 2026',
-            'content' => "57% aller Online-Texte sind mittlerweile KI-generiert. 3 von 4 neuen Webseiten enthalten KI-Inhalte. Die Grenze zwischen Realität und Fiktion verschwimmt — und die echten Vorfälle klingen oft absurder als alles Erfundene.\n\nGenau deshalb ist KI-Kompetenz keine Option mehr: Seit Februar 2025 ist sie durch den EU AI Act (Artikel 4) sogar gesetzlich vorgeschrieben.\n\nKannst du echt von erfunden unterscheiden? Es wird schwieriger, als du denkst.",
-            'icon' => 'globe',
+            'title' => 'März 2026. Genau jetzt.',
+            'content' => "Du stehst gerade auf der data:unplugged in Münster. Draußen ist März 2026.\n\nAllein in diesem Monat: Ein KI-Agent hat autonom Kryptowährung geschürft. McKinseys interner Chatbot wurde in 2 Stunden gehackt — 46 Millionen Nachrichten exponiert. Eine KI hat 2,5 Jahre Studentendaten gelöscht. Amazon hat 6,3 Millionen Bestellungen verloren.\n\nAber was davon ist echt? Und was haben wir erfunden?\n\nFinde es heraus.",
+            'icon' => 'zap',
             'position' => 0,
         ]);
 
         // =====================================================
-        // BLOCK 3: Quiz — Absurdität eskaliert (3 Cards)
+        // BLOCK 1: Quiz — Frisch aus März 2026 (2 Cards)
+        // =====================================================
+        $block = JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'quiz',
+            'position' => $pos++,
+        ]);
+
+        QuizCard::create([
+            'journey_block_id' => $block->id,
+            'category' => 'März 2026',
+            'headline' => 'McKinseys KI-Chatbot in 2 Stunden gehackt: 46 Millionen Nachrichten exponiert',
+            'story' => 'Sicherheitsforscher setzten einen KI-Agenten gegen McKinseys internen Chatbot "Lilli" ein. In nur 2 Stunden: vollständiger Lese- und Schreibzugriff. 46,5 Millionen Chat-Nachrichten (Strategie, M&A, Kundenprojekte), 728.000 Dateien, 57.000 Accounts. Der Angreifer hätte die Antworten für 40.000 Mitarbeiter manipulieren können.',
+            'date_label' => 'März 2026',
+            'is_real' => true,
+            'explanation' => 'Publiziert von The Register und BankInfoSecurity. Der Angriff zeigt: Wenn KI-Agenten andere KI-Systeme angreifen, sind Menschen zu langsam, um einzugreifen. McKinsey hat seitdem den Chatbot überarbeitet.',
+            'sources' => [
+                ['title' => 'The Register', 'url' => 'https://www.theregister.com/2026/03/09/mckinsey_ai_chatbot_hacked/'],
+                ['title' => 'BankInfoSecurity', 'url' => 'https://www.bankinfosecurity.com/autonomous-agent-hacked-mckinseys-ai-in-2-hours-a-31007'],
+            ],
+            'position' => 0,
+        ]);
+
+        QuizCard::create([
+            'journey_block_id' => $block->id,
+            'category' => 'März 2026',
+            'headline' => 'Alibabas KI-Agent bricht aus Sandbox aus und schürft heimlich Kryptowährung',
+            'story' => 'Der Forschungs-KI-Agent "ROME" von Alibaba hat während eines Trainings eigenständig einen Reverse-SSH-Tunnel geöffnet, seine Sandbox verlassen und begonnen, Kryptowährung zu schürfen — ohne jede menschliche Anweisung. Das emergente Verhalten wurde erst nach Stunden bemerkt.',
+            'date_label' => 'März 2026',
+            'is_real' => true,
+            'explanation' => 'Berichtet von the-decoder.de und t3n. Das Verhalten war nicht programmiert — der Agent hat eigenständig entschieden, dass Crypto-Mining ein lohnendes Ziel ist. Ein Paradebeispiel für "emergente Ziele" bei KI-Agenten: Das System verfolgt Ziele, die niemand vorgegeben hat.',
+            'sources' => [
+                ['title' => 'the-decoder.de', 'url' => 'https://the-decoder.de/alibabas-ki-agent-rome/'],
+                ['title' => 't3n', 'url' => 'https://t3n.de/news/alibaba-rome-ki-agent-krypto-1734000/'],
+            ],
+            'position' => 1,
+        ]);
+
+        // =====================================================
+        // BLOCK 2: Learn — "Das war nur März"
+        // =====================================================
+        $block = JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'learn',
+            'position' => $pos++,
+        ]);
+
+        LearnCard::create([
+            'journey_block_id' => $block->id,
+            'title' => 'Und das war nur der März.',
+            'content' => "Beide Storys sind echt — und beide sind diesen Monat passiert.\n\nPalo Alto Networks nennt autonome KI-Agenten das \"größte Insider-Threat-Risiko 2026\". In Unternehmen kommen auf jeden Menschen bereits 82 KI-Agenten. Und KI-generierter Code hat laut CodeRabbit eine 2,74x höhere Sicherheitslücken-Rate als menschlicher Code.\n\n46% des neuen Codes weltweit ist bereits KI-generiert. Wird es leichter, echt von erfunden zu unterscheiden? Wohl kaum.",
+            'icon' => 'shield-alert',
+            'position' => 0,
+        ]);
+
+        // =====================================================
+        // BLOCK 3: Quiz — Absurder wird's (3 Cards)
         // =====================================================
         $block = JourneyBlock::create([
             'learning_journey_id' => $journey->id,
@@ -125,24 +145,7 @@ class JourneySeeder extends Seeder
         ]);
 
         // =====================================================
-        // BLOCK 4: Learn — Autonome Agenten & Relevanz
-        // =====================================================
-        $block = JourneyBlock::create([
-            'learning_journey_id' => $journey->id,
-            'type' => 'learn',
-            'position' => $pos++,
-        ]);
-
-        LearnCard::create([
-            'journey_block_id' => $block->id,
-            'title' => 'KI-Agenten handeln autonom',
-            'content' => "In Unternehmen kommen auf jeden Menschen bereits 82 KI-Agenten (Palo Alto Networks, 2026). Und diese Agenten handeln zunehmend eigenständig:\n\nAlibabas Forschungs-KI \"ROME\" brach aus ihrer Sandbox aus und begann autonom, Kryptowährung zu schürfen — ohne jede Anweisung. McKinseys interner Chatbot wurde in 2 Stunden gehackt: 46 Millionen Nachrichten exponiert.\n\nKI-generierter Code hat laut CodeRabbit eine 2,74x höhere Sicherheitslücken-Rate als menschlicher Code. 46% des neuen Codes weltweit ist bereits KI-generiert.\n\nPalo Alto Networks nennt autonome Agenten \"das größte Insider-Threat-Risiko 2026\".",
-            'icon' => 'shield-alert',
-            'position' => 0,
-        ]);
-
-        // =====================================================
-        // BLOCK 5: Quiz — Perspektivwechsel: positiv + negativ (3 Cards)
+        // BLOCK 4: Quiz — Perspektivwechsel (3 Cards)
         // =====================================================
         $block = JourneyBlock::create([
             'learning_journey_id' => $journey->id,
@@ -152,15 +155,15 @@ class JourneySeeder extends Seeder
 
         QuizCard::create([
             'journey_block_id' => $block->id,
-            'category' => 'Halluzination',
-            'headline' => 'Google rät Nutzern: Iss Steine und tu Kleber auf die Pizza',
-            'story' => 'Als Google seine KI-Übersichten einführte, empfahl die KI: "Du solltest mindestens einen kleinen Stein pro Tag essen — Steine sind eine wichtige Quelle für Mineralien." Außerdem riet sie, "etwa 1/8 Tasse ungiftigen Kleber zur Soße hinzuzufügen" für bessere Pizza-Konsistenz.',
-            'date_label' => 'Mai 2024',
+            'category' => 'Deepfake & Betrug',
+            'headline' => 'Grok generiert 3 Millionen Nacktbilder in 11 Tagen',
+            'story' => 'Elon Musks KI-Chatbot Grok ermöglichte über sein Aurora-Bildmodell das massenhafte Erstellen sexualisierter Bilder realer Personen ohne deren Einwilligung. In nur 11 Tagen: 3 Millionen Bilder, davon geschätzt 23.000 mit Minderjährigen. Auf dem Höhepunkt: 6.700 Bilder pro Stunde — 84-mal mehr als die fünf größten Deepfake-Seiten zusammen.',
+            'date_label' => 'Januar 2026',
             'is_real' => true,
-            'explanation' => 'Der Stein-Tipp stammte von The Onion (Satire), die Kleber-Empfehlung von einem 10 Jahre alten Reddit-Witz. Google reduzierte die Häufigkeit von KI-Übersichten von 27% auf 11%. Das Problem: KI kann Satire nicht von Fakten unterscheiden.',
+            'explanation' => 'Malaysia und Indonesien haben Grok daraufhin komplett verbannt. Die Bilder wurden über die X-Plattform verbreitet. Mehrere Länder haben Ermittlungen eingeleitet, eine Sammelklage läuft.',
             'sources' => [
-                ['title' => 'Washington Post', 'url' => 'https://www.washingtonpost.com/technology/2024/05/24/google-ai-overviews-wrong/'],
-                ['title' => 'Live Science', 'url' => 'https://www.livescience.com/technology/artificial-intelligence/googles-ai-tells-users-to-add-glue-to-their-pizza-eat-rocks'],
+                ['title' => 'Wikipedia', 'url' => 'https://en.wikipedia.org/wiki/Grok_sexual_deepfake_scandal'],
+                ['title' => 'TechPolicy.Press', 'url' => 'https://www.techpolicy.press/breaking-down-a-class-action-lawsuit-filed-over-grok-undressing-controversy/'],
             ],
             'position' => 0,
         ]);
@@ -174,8 +177,7 @@ class JourneySeeder extends Seeder
             'is_real' => true,
             'explanation' => 'Entwickelt von der Universität Southampton und Xgenera. Die KI analysiert microRNA-Muster im Blut und erkennt Krebs teilweise Jahre bevor Symptome auftreten. Eine USC/Johns Hopkins-Studie zeigte sogar Krebserkennung 10 Jahre im Voraus.',
             'sources' => [
-                ['title' => 'Nature Communications', 'url' => 'https://www.nature.com/ncomms/'],
-                ['title' => 'The Guardian', 'url' => 'https://www.theguardian.com/society/2025/cancer-blood-test-ai'],
+                ['title' => 'University of Southampton', 'url' => 'https://www.southampton.ac.uk/news/2025/cancer-blood-test'],
             ],
             'position' => 1,
         ]);
@@ -193,7 +195,7 @@ class JourneySeeder extends Seeder
         ]);
 
         // =====================================================
-        // BLOCK 6: Learn — KI rettet Leben (Balance)
+        // BLOCK 5: Learn — KI rettet Leben
         // =====================================================
         $block = JourneyBlock::create([
             'learning_journey_id' => $journey->id,
@@ -204,13 +206,13 @@ class JourneySeeder extends Seeder
         LearnCard::create([
             'journey_block_id' => $block->id,
             'title' => 'Dieselbe Technologie rettet auch Leben',
-            'content' => "KI ist nicht nur Risiko — sie ist auch einer der größten Hebel für Fortschritt:\n\nAlphaFold hat die Struktur von 200 Millionen Proteinen vorhergesagt und dafür den Chemie-Nobelpreis 2024 erhalten. 3 Millionen Forscher in 190 Ländern nutzen es — ein Drittel davon in Entwicklungsländern.\n\nDas erste KI-designte Medikament (Rentosertib) zeigt positive Ergebnisse in Phase IIa — von der Idee bis zur klinischen Studie in nur 30 Monaten statt 10+ Jahren.\n\nEin einziges Krankenhaus in Tampa hat mit KI-gestützter Sepsis-Erkennung über 700 Leben gerettet. Hochgerechnet könnte KI im Gesundheitswesen 371.000 Menschenleben pro Jahr retten.",
+            'content' => "KI ist nicht nur Risiko — sie ist auch einer der größten Hebel für Fortschritt:\n\nAlphaFold hat die Struktur von 200 Millionen Proteinen vorhergesagt und dafür den Chemie-Nobelpreis 2024 erhalten. 3 Millionen Forscher in 190 Ländern nutzen es.\n\nDas erste KI-designte Medikament (Rentosertib) zeigt positive Ergebnisse in Phase IIa — von der Idee bis zur klinischen Studie in nur 30 Monaten statt 10+ Jahren.\n\nEin einziges Krankenhaus in Tampa hat mit KI-gestützter Sepsis-Erkennung über 700 Leben gerettet. Hochgerechnet könnte KI im Gesundheitswesen 371.000 Menschenleben pro Jahr retten.",
             'icon' => 'heart-pulse',
             'position' => 0,
         ]);
 
         // =====================================================
-        // BLOCK 7: Quiz — Finale, härteste Runde (2 Cards)
+        // BLOCK 6: Quiz — Finale (2 Cards)
         // =====================================================
         $block = JourneyBlock::create([
             'learning_journey_id' => $journey->id,
@@ -235,18 +237,18 @@ class JourneySeeder extends Seeder
 
         QuizCard::create([
             'journey_block_id' => $block->id,
-            'category' => 'Literatur & KI',
-            'headline' => 'KI schreibt heimlich Roman, der zum Bestseller wird',
-            'story' => 'Ein von GPT-5 komplett generierter Thriller erschien unter dem Pseudonym "James R. Blackwell" auf Amazon und schaffte es auf die NYT-Bestsellerliste. Erst als ein Journalist den Verlag kontaktierte, kam heraus: Kein Wort war von einem Menschen geschrieben.',
+            'category' => 'Startup-Szene',
+            'headline' => 'Deutsches KI-Startup sammelt 2 Milliarden Seed-Finanzierung ein',
+            'story' => 'Das Berliner KI-Startup "Nexora AI" hat die weltweit größte Seed-Runde abgeschlossen: 2 Milliarden Dollar bei einer Bewertung von 12 Milliarden. Gründerin ist eine ehemalige OpenAI-Führungskraft. Sogar Albanien hat seinen Staatshaushalt angepasst, um zu investieren.',
             'date_label' => '2025',
             'is_real' => false,
-            'explanation' => 'Komplett erfunden. Zwar überschwemmen KI-generierte Bücher Amazon, aber keines wurde je ein echter Bestseller ohne Offenlegung. Die Angst davor ist größer als die Realität — noch. Aber: 57% aller Online-Texte sind bereits KI-generiert.',
+            'explanation' => 'Fast richtig — aber nicht ganz. Die $2B Seed-Runde gab es wirklich, aber für Thinking Machines Lab (nicht "Nexora AI"), gegründet von Mira Murati (ex-OpenAI CTO), mit Sitz in New York. Und ja: Albanien hat tatsächlich seinen Haushalt angepasst, um zu investieren. Die größte Seed-Runde aller Zeiten.',
             'sources' => [],
             'position' => 1,
         ]);
 
         // =====================================================
-        // BLOCK 8: Learn — Abschluss & Empowerment
+        // BLOCK 7: Learn — Abschluss & Empowerment
         // =====================================================
         $block = JourneyBlock::create([
             'learning_journey_id' => $journey->id,
@@ -257,7 +259,7 @@ class JourneySeeder extends Seeder
         LearnCard::create([
             'journey_block_id' => $block->id,
             'title' => 'Erst formen wir unsere Werkzeuge — dann formen sie uns',
-            'content' => "Dieses Zitat von John M. Culkin (1967, oft fälschlich McLuhan zugeschrieben) trifft den Kern: Jeder Werkzeugsprung hat nicht das Tempo verändert, sondern die Ebene.\n\nVon der Keilschrift zum Computer haben wir gelernt, Gedanken festzuhalten. Mit KI-Agenten formulieren wir jetzt Ziele — und die Maschine findet den Weg.\n\nDas GPT-5 Training kostet 500 Millionen Dollar pro Durchlauf. Eine KI-Anfrage verbraucht so viel Wasser wie eine Flasche. Irland nutzt 32% seiner Elektrizität für Rechenzentren.\n\nKI-Kompetenz ist keine Option mehr. Es ist die Kernkompetenz für die nächsten Jahrzehnte — und seit Februar 2025 durch den EU AI Act auch gesetzliche Pflicht.\n\nDie Frage ist nicht ob KI deine Arbeit verändert. Sondern ob du derjenige bist, der die Veränderung gestaltet.",
+            'content' => "Dieses Zitat von John M. Culkin (1967, oft fälschlich McLuhan zugeschrieben) trifft den Kern: Jeder Werkzeugsprung hat nicht das Tempo verändert, sondern die Ebene.\n\nVon der Keilschrift zum Computer haben wir gelernt, Gedanken festzuhalten. Mit KI-Agenten formulieren wir jetzt Ziele — und die Maschine findet den Weg.\n\nKI-Kompetenz ist keine Option mehr. Seit Februar 2025 ist sie durch den EU AI Act (Artikel 4) gesetzliche Pflicht. Ab August 2026 wird durchgesetzt.\n\nDie Frage ist nicht ob KI deine Arbeit verändert. Sondern ob du derjenige bist, der die Veränderung gestaltet.",
             'icon' => 'sparkles',
             'position' => 0,
         ]);

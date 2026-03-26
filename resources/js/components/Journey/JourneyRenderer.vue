@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { RotateCcw, Zap } from 'lucide-vue-next';
+import { ArrowRight, RotateCcw, Zap } from 'lucide-vue-next';
 import QuizCard from './QuizCard.vue';
 import LearnCard from './LearnCard.vue';
 import PersonaInterstitial from './PersonaInterstitial.vue';
@@ -282,6 +282,14 @@ const endMessage = computed(() => {
                 <RotateCcw class="h-5 w-5" />
                 Nochmal spielen
             </button>
+
+            <a
+                href="/ai-ready"
+                class="mt-4 flex items-center gap-2 text-[15px] font-medium text-[#007aff] transition-colors hover:text-[#007aff]/80"
+            >
+                AI Ready: Das komplette Training für dein Team
+                <ArrowRight class="h-4 w-4" />
+            </a>
         </div>
     </div>
 </template>
