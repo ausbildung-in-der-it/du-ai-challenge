@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue';
-import { useCompletion } from '@ai-sdk/vue';
 import { X, Check, ExternalLink, ChevronRight, Calendar, Sparkles } from 'lucide-vue-next';
+import { useStreamText } from '@/composables/useStreamText';
 
 const props = defineProps<{
     card: App.Data.QuizCardData;
@@ -12,11 +12,13 @@ const props = defineProps<{
 const emit = defineEmits<{
     answered: [userSaidReal: boolean];
     next: [];
+    commentaryDone: [text: string];
 }>();
 
 const revealed = ref(false);
 const userAnswer = ref<boolean | null>(null);
 const revealEl = ref<HTMLElement | null>(null);
+const commentary = useStreamText();
 
 const isCorrect = computed(() => userAnswer.value === props.card.is_real);
 
@@ -24,47 +26,23 @@ const realPhrases = [
     'Das ist tatsächlich so passiert.',
     'Kein Witz — das ist real.',
     'So geschehen. Wirklich.',
-    'Ja, das ist echt.',
     'Willkommen in der Realität.',
     'Klingt verrückt, ist aber wahr.',
     'Die Realität übertrifft jede Fiktion.',
-    'Das hat sich so zugetragen.',
 ];
 
 const fakePhrases = [
     'Das ist zum Glück nicht passiert.',
     'Nein — das haben wir erfunden.',
     'Frei erfunden. Dieses Mal.',
-    'Das war ausgedacht.',
     'Noch ist das Fiktion.',
-    'Gut erkannt — oder auch nicht.',
     'Das ist nicht wahr. Noch nicht.',
     'Pure Erfindung. Vorerst.',
 ];
 
 const revealHeadline = ref('');
 
-function getXsrfToken(): string {
-    return document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1]
-        ?.replace(/%3D/g, '=') ?? '';
-}
-
-const { completion, isLoading: commentaryLoading, complete } = useCompletion({
-    api: computed(() =>
-        props.sessionId
-            ? `/api/sessions/${props.sessionId}/commentaries`
-            : '/api/sessions/none/commentaries',
-    ).value,
-    headers: () => ({
-        'X-XSRF-TOKEN': getXsrfToken(),
-        'X-Requested-With': 'XMLHttpRequest',
-    }),
-});
-
-function answer(saidReal: boolean) {
+async function answer(saidReal: boolean) {
     if (revealed.value) return;
     userAnswer.value = saidReal;
     revealed.value = true;
@@ -74,18 +52,18 @@ function answer(saidReal: boolean) {
 
     emit('answered', saidReal);
 
-    // Stream commentary
-    if (props.sessionId) {
-        complete('Kommentiere diese Quiz-Antwort.', {
-            body: {
-                quiz_card_id: props.card.id,
-            },
-        });
-    }
-
     nextTick(() => {
         revealEl.value?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
+
+    // Stream commentary with dynamic URL
+    if (props.sessionId) {
+        const result = await commentary.stream(
+            `/api/sessions/${props.sessionId}/commentaries`,
+            { quiz_card_id: props.card.id },
+        );
+        emit('commentaryDone', result);
+    }
 }
 </script>
 
@@ -128,11 +106,11 @@ function answer(saidReal: boolean) {
                             </p>
 
                             <!-- AI Commentary (SSE streamed) -->
-                            <div v-if="completion || commentaryLoading" class="mb-4 flex items-start gap-2">
+                            <div v-if="commentary.text.value || commentary.isLoading.value" class="mb-4 flex items-start gap-2">
                                 <Sparkles class="mt-0.5 h-4 w-4 shrink-0 text-[#007aff] opacity-60" />
                                 <p class="text-[14px] leading-[1.5] text-[#86868b] italic dark:text-[#98989d]">
-                                    {{ completion }}<span
-                                        v-if="commentaryLoading"
+                                    {{ commentary.text.value }}<span
+                                        v-if="commentary.isLoading.value"
                                         class="ml-0.5 inline-block h-[14px] w-[2px] animate-pulse bg-[#007aff]"
                                     />
                                 </p>
@@ -166,7 +144,7 @@ function answer(saidReal: boolean) {
                     <Check class="h-5 w-5" /> Echt passiert
                 </button>
             </div>
-            <div v-else-if="showWeiterButton && !commentaryLoading">
+            <div v-else-if="showWeiterButton && !commentary.isLoading.value">
                 <button class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#007aff] px-4 py-4 text-[17px] font-semibold tracking-[-0.2px] text-white transition-all active:scale-[0.97]" @click="$emit('next')">
                     Weiter <ChevronRight class="h-5 w-5" />
                 </button>

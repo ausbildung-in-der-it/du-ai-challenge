@@ -6,8 +6,7 @@ import LearnCard from './LearnCard.vue';
 import PersonaInterstitial from './PersonaInterstitial.vue';
 import PromptReveal from './PromptReveal.vue';
 import { useJourneySession } from '@/composables/useJourneySession';
-import { useCompletion } from '@ai-sdk/vue';
-import { useTypewriter } from '@/composables/useTypewriter';
+import { useStreamText } from '@/composables/useStreamText';
 
 const props = defineProps<{
     journey: App.Data.LearningJourneyData;
@@ -17,10 +16,14 @@ type Screen = 'loading' | 'start' | 'journey' | 'persona' | 'prompt-reveal' | 'e
 
 const screen = ref<Screen>('loading');
 const session = useJourneySession(props.journey);
+const styledCommentary = useStreamText();
 
 const currentBlock = computed(() => props.journey.blocks[session.currentBlock.value]);
 
-// For the persona styled commentary on PromptReveal
+// Store the first commentary text for PersonaInterstitial
+const lastCommentaryText = ref<string | null>(null);
+const promptText = ref<string | null>(null);
+
 function getXsrfToken(): string {
     return document.cookie
         .split('; ')
@@ -28,28 +31,6 @@ function getXsrfToken(): string {
         ?.split('=')[1]
         ?.replace(/%3D/g, '=') ?? '';
 }
-
-const styledCompletion = useCompletion({
-    api: computed(() =>
-        session.sessionId.value
-            ? `/api/sessions/${session.sessionId.value}/commentaries`
-            : '/api/sessions/_/commentaries',
-    ).value,
-    headers: () => ({
-        'X-XSRF-TOKEN': getXsrfToken(),
-        'X-Requested-With': 'XMLHttpRequest',
-    }),
-});
-
-const promptText = ref<string | null>(null);
-const promptTypewriter = useTypewriter(8);
-
-// "Weiter" on quiz: always show (streaming handles its own loading state)
-const showWeiterOnQuiz = computed(() => {
-    // After first quiz, before persona shown → show Weiter (goes to persona)
-    // Otherwise → always show (commentary streams independently)
-    return true;
-});
 
 onMounted(async () => {
     const resumed = await session.resumeSession();
@@ -75,8 +56,11 @@ async function onQuizAnswered(userSaidReal: boolean) {
     await session.saveProgress();
 }
 
+function onCommentaryDone(text: string) {
+    lastCommentaryText.value = text;
+}
+
 function onQuizNext() {
-    // After first quiz and commentary done → show persona interstitial
     if (session.answeredQuizCount.value === 1 && !session.personaPromptShown.value) {
         screen.value = 'persona';
         return;
@@ -87,42 +71,46 @@ function onQuizNext() {
 async function onPersonaSet(style: string) {
     await session.setPersona(style);
 
-    // Fetch the prompt that WILL be used
     const block = currentBlock.value;
     if (block?.type === 'quiz' && session.sessionId.value) {
         const card = block.quiz_cards[session.currentItem.value];
 
-        // Stream styled commentary
-        styledCompletion.complete('Kommentiere diese Quiz-Antwort.', {
-            body: {
-                quiz_card_id: card.id,
-                persona_style: style,
-            },
-        });
+        // Stream styled commentary (dynamic URL — no stale session bug)
+        styledCommentary.stream(
+            `/api/sessions/${session.sessionId.value}/commentaries`,
+            { quiz_card_id: card.id, persona_style: style },
+        );
 
-        // Fetch prompt from latest commentary
-        setTimeout(async () => {
-            try {
-                const res = await fetch(
-                    `/api/sessions/${session.sessionId.value}/cards/${card.id}/commentary`,
-                    {
-                        headers: {
-                            Accept: 'application/json',
-                            'X-XSRF-TOKEN': getXsrfToken(),
-                            'X-Requested-With': 'XMLHttpRequest',
-                        },
-                    },
-                );
-                if (res.ok) {
-                    const data = await res.json();
-                    promptText.value = data.prompt_used;
-                    if (data.prompt_used) promptTypewriter.start(data.prompt_used);
-                }
-            } catch { /* prompt display is nice-to-have */ }
-        }, 1000);
+        // Fetch the prompt after a short delay (needs DB write from stream's then() callback)
+        fetchPrompt(card.id);
     }
 
     screen.value = 'prompt-reveal';
+}
+
+async function fetchPrompt(cardId: number, retries = 5) {
+    for (let i = 0; i < retries; i++) {
+        await new Promise((r) => setTimeout(r, 1500));
+        try {
+            const res = await fetch(
+                `/api/sessions/${session.sessionId.value}/cards/${cardId}/commentary`,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        'X-XSRF-TOKEN': getXsrfToken(),
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                },
+            );
+            if (res.ok) {
+                const data = await res.json();
+                if (data.prompt_used) {
+                    promptText.value = data.prompt_used;
+                    return;
+                }
+            }
+        } catch { /* retry */ }
+    }
 }
 
 function onPersonaSkip() {
@@ -132,16 +120,13 @@ function onPersonaSkip() {
 
 function onPromptRevealNext() {
     promptText.value = null;
+    styledCommentary.reset();
     advanceToNext();
 }
 
 async function advanceToNext() {
     const result = await session.advance();
-    if (result === 'end') {
-        screen.value = 'end';
-    } else {
-        screen.value = 'journey';
-    }
+    screen.value = result === 'end' ? 'end' : 'journey';
 }
 
 const endTitle = computed(() => {
@@ -221,8 +206,9 @@ const endMessage = computed(() => {
                     :key="`quiz-${session.currentBlock.value}-${session.currentItem.value}`"
                     :card="currentBlock.quiz_cards[session.currentItem.value]"
                     :session-id="session.sessionId.value"
-                    :show-weiter-button="showWeiterOnQuiz"
+                    :show-weiter-button="true"
                     @answered="onQuizAnswered"
+                    @commentary-done="onCommentaryDone"
                     @next="onQuizNext"
                 />
                 <LearnCard
@@ -241,7 +227,11 @@ const endMessage = computed(() => {
                     Prompt Engineering
                 </span>
             </header>
-            <PersonaInterstitial @set-persona="onPersonaSet" @skip="onPersonaSkip" />
+            <PersonaInterstitial
+                :previous-commentary="lastCommentaryText"
+                @set-persona="onPersonaSet"
+                @skip="onPersonaSkip"
+            />
         </template>
 
         <!-- PROMPT REVEAL -->
@@ -253,8 +243,8 @@ const endMessage = computed(() => {
             </header>
             <PromptReveal
                 :prompt-used="promptText"
-                :commentary-text="styledCompletion.completion.value"
-                :is-loading="styledCompletion.isLoading.value"
+                :commentary-text="styledCommentary.text.value"
+                :commentary-loading="styledCommentary.isLoading.value"
                 @next="onPromptRevealNext"
             />
         </template>
@@ -267,7 +257,6 @@ const endMessage = computed(() => {
                 </span>
                 <span class="mt-0.5 text-[13px] text-[#86868b] dark:text-[#98989d]">richtig</span>
             </div>
-            <div v-else class="mb-6 text-6xl">🎉</div>
 
             <h1 class="mb-3 text-[32px] leading-[1.15] font-extrabold tracking-[-0.8px] text-[#1d1d1f] dark:text-[#f5f5f7]">
                 {{ endTitle }}
