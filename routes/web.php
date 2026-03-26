@@ -40,7 +40,6 @@ Route::post('/api/transcribe/react', [TranscriptionController::class, 'react'])-
 Route::post('/api/ai-compare/stream', [AiCompareController::class, 'stream'])->name('ai-compare.stream');
 
 // AI Idea Generator
-Route::post('/api/ai-ready/transcribe', [IdeaController::class, 'transcribe'])->name('ai-ready.transcribe');
 Route::post('/api/ai-ready/generate', [IdeaController::class, 'generate'])->name('ai-ready.generate');
 
 // Dev: reset all sessions for a journey

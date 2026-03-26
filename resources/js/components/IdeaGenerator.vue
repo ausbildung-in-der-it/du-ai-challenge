@@ -147,7 +147,7 @@ async function transcribeAudio(blob: Blob) {
         const formData = new FormData();
         formData.append('audio', blob, 'recording.webm');
 
-        const res = await fetch('/api/ai-ready/transcribe', {
+        const res = await fetch('/api/transcribe', {
             method: 'POST',
             credentials: 'same-origin',
             headers: {

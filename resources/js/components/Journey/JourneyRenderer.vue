@@ -265,35 +265,52 @@ const endMessage = computed(() => {
         </template>
 
         <!-- END -->
-        <div v-else-if="screen === 'end'" class="flex flex-1 flex-col items-center justify-center px-8 text-center">
-            <div v-if="session.totalQuizCards.value > 0" class="mb-6 flex h-36 w-36 flex-col items-center justify-center rounded-full border-[6px] border-[#007aff]">
-                <span class="text-[42px] leading-none font-extrabold text-[#007aff]">
-                    {{ session.correctCount.value }}/{{ session.totalQuizCards.value }}
-                </span>
-                <span class="mt-0.5 text-[13px] text-[#86868b] dark:text-[#98989d]">richtig</span>
+        <div v-else-if="screen === 'end'" class="flex flex-1 flex-col overflow-y-auto px-5 pt-8 pb-8">
+            <!-- Score -->
+            <div class="mb-6 flex flex-col items-center text-center">
+                <div v-if="session.totalQuizCards.value > 0" class="mb-5 flex h-32 w-32 flex-col items-center justify-center rounded-full border-[5px] border-[#007aff]">
+                    <span class="text-[36px] leading-none font-extrabold text-[#007aff]">
+                        {{ session.correctCount.value }}/{{ session.totalQuizCards.value }}
+                    </span>
+                    <span class="mt-0.5 text-[12px] text-[#86868b] dark:text-[#98989d]">richtig</span>
+                </div>
+
+                <h1 class="mb-2 text-[28px] leading-[1.15] font-extrabold tracking-[-0.6px] text-[#1d1d1f] dark:text-[#f5f5f7]">
+                    {{ endTitle }}
+                </h1>
+                <p class="mb-6 max-w-[300px] text-[15px] leading-[1.5] text-[#86868b] dark:text-[#98989d]">
+                    {{ endMessage }}
+                </p>
             </div>
 
-            <h1 class="mb-3 text-[32px] leading-[1.15] font-extrabold tracking-[-0.8px] text-[#1d1d1f] dark:text-[#f5f5f7]">
-                {{ endTitle }}
-            </h1>
-            <p class="mb-8 max-w-[300px] text-[17px] leading-[1.5] text-[#86868b] dark:text-[#98989d]">
-                {{ endMessage }}
-            </p>
-            <button
-                class="flex cursor-pointer items-center gap-2 rounded-full bg-[#007aff] px-10 py-4 text-[17px] font-semibold tracking-[-0.2px] text-white shadow-lg shadow-[#007aff]/25 transition-all active:scale-[0.97]"
-                @click="restart"
-            >
-                <RotateCcw class="h-5 w-5" />
-                Nochmal spielen
-            </button>
-
+            <!-- AI Ready CTA Card -->
             <a
                 href="/ai-ready"
-                class="mt-4 flex items-center gap-2 text-[15px] font-medium text-[#007aff] transition-colors hover:text-[#007aff]/80"
+                class="mb-4 block rounded-2xl bg-gradient-to-br from-[#007aff] to-[#5856d6] p-6 shadow-lg shadow-[#007aff]/20 transition-all active:scale-[0.98]"
             >
-                AI Ready: Das komplette Training für dein Team
-                <ArrowRight class="h-4 w-4" />
+                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
+                    <Zap class="h-5 w-5 text-white" />
+                </div>
+                <h3 class="mb-1 text-[20px] font-bold tracking-[-0.3px] text-white">
+                    AI Ready
+                </h3>
+                <p class="mb-4 text-[14px] leading-[1.5] text-white/75">
+                    Das komplette KI-Training für dein Team. Von den Grundlagen bis zur Umsetzung — praxisnah, interaktiv, sofort anwendbar.
+                </p>
+                <span class="inline-flex items-center gap-1.5 text-[15px] font-semibold text-white">
+                    Mehr erfahren
+                    <ArrowRight class="h-4 w-4" />
+                </span>
             </a>
+
+            <!-- Nochmal spielen (secondary) -->
+            <button
+                class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl px-4 py-3 text-[15px] font-medium text-[#86868b] transition-all active:scale-[0.97] dark:text-[#98989d]"
+                @click="restart"
+            >
+                <RotateCcw class="h-4 w-4" />
+                Nochmal spielen
+            </button>
         </div>
     </div>
 </template>
