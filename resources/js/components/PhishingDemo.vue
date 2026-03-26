@@ -1,107 +1,85 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { Mail, ChevronLeft, AlertTriangle, ExternalLink, Shield, Clock, Paperclip } from 'lucide-vue-next';
+import { ref, onUnmounted } from 'vue';
+import { Mail, ChevronLeft, AlertTriangle, ExternalLink, Shield } from 'lucide-vue-next';
 
 type AnimationPhase =
+    | 'idle'
     | 'inbox'
     | 'email-arriving'
     | 'email-visible'
     | 'email-opening'
     | 'email-open'
-    | 'annotations-in'
-    | 'resetting';
+    | 'annotations-in';
 
-const phase = ref<AnimationPhase>('inbox');
+const phase = ref<AnimationPhase>('idle');
+const containerRef = ref<HTMLElement | null>(null);
 let timerId: ReturnType<typeof setTimeout> | null = null;
+let observerInstance: IntersectionObserver | null = null;
+let hasStarted = false;
 
 const inboxEmails = [
-    {
-        id: 'e1',
-        sender: 'Anna Berger',
-        initials: 'AB',
-        initialsColor: 'bg-[#5856d6]',
-        subject: 'Q2 Budget-Freigabe',
-        preview: 'Hi, anbei die finale Version...',
-        time: '10:23',
-        unread: false,
-    },
-    {
-        id: 'e2',
-        sender: 'Lars Hoffmann',
-        initials: 'LH',
-        initialsColor: 'bg-[#34c759]',
-        subject: 'Meeting morgen verschoben',
-        preview: 'Kurze Info: Das Team-Meeting...',
-        time: '09:45',
-        unread: false,
-    },
-    {
-        id: 'e3',
-        sender: 'Projektmanagement',
-        initials: 'PM',
-        initialsColor: 'bg-[#ff9500]',
-        subject: 'Sprint Review Protokoll',
-        preview: 'Zusammenfassung des heutigen...',
-        time: 'gestern',
-        unread: false,
-    },
+    { id: 'e1', sender: 'Anna Berger', initials: 'AB', initialsColor: 'bg-[#5856d6]', subject: 'Q2 Budget-Freigabe', preview: 'Hi, anbei die finale Version...', time: '10:23' },
+    { id: 'e2', sender: 'Lars Hoffmann', initials: 'LH', initialsColor: 'bg-[#34c759]', subject: 'Meeting morgen verschoben', preview: 'Kurze Info: Das Team-Meeting...', time: '09:45' },
+    { id: 'e3', sender: 'Projektmanagement', initials: 'PM', initialsColor: 'bg-[#ff9500]', subject: 'Sprint Review Protokoll', preview: 'Zusammenfassung des heutigen...', time: 'gestern' },
 ];
 
 const phishingEmail = {
-    id: 'phish',
     sender: 'Michael Weber - IT-Abteilung',
     email: 'm.weber@contoso-intern.de',
     initials: 'MW',
-    initialsColor: 'bg-[#007aff]',
     subject: 'Dringend: Ihr Microsoft 365 Passwort läuft ab',
     preview: 'Ihr Passwort läuft in 24 Stunden ab...',
     time: 'jetzt',
-    unread: true,
 };
 
 function schedule(fn: () => void, delay: number) {
     timerId = setTimeout(fn, delay);
 }
 
-function runLoop() {
+function runOnce() {
     phase.value = 'inbox';
 
     schedule(() => {
         phase.value = 'email-arriving';
-
         schedule(() => {
             phase.value = 'email-visible';
-
             schedule(() => {
                 phase.value = 'email-opening';
-
-                // Let the CSS transition play (400ms), then mark as fully open
                 schedule(() => {
                     phase.value = 'email-open';
-
                     schedule(() => {
+                        // Final state — stays here
                         phase.value = 'annotations-in';
-
-                        schedule(() => {
-                            phase.value = 'resetting';
-
-                            schedule(() => {
-                                runLoop();
-                            }, 600);
-                        }, 2500);
-                    }, 3000);
+                    }, 2500);
                 }, 450);
             }, 1500);
         }, 500);
-    }, 1500);
+    }, 1200);
 }
 
-onMounted(() => {
-    runLoop();
-});
+function onVisible(el: HTMLElement) {
+    observerInstance = new IntersectionObserver(
+        (entries) => {
+            if (entries[0].isIntersecting && !hasStarted) {
+                hasStarted = true;
+                runOnce();
+                observerInstance?.disconnect();
+            }
+        },
+        { threshold: 0.3 },
+    );
+    observerInstance.observe(el);
+}
+
+function setRef(el: unknown) {
+    const htmlEl = el as HTMLElement | null;
+    containerRef.value = htmlEl;
+    if (htmlEl) onVisible(htmlEl);
+}
 
 onUnmounted(() => {
     if (timerId) clearTimeout(timerId);
+    observerInstance?.disconnect();
 });
 
 const showPhishingInInbox = (p: AnimationPhase) =>
@@ -115,10 +93,11 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
 
 <template>
     <div
-        class="relative mx-auto w-full max-w-[380px] overflow-hidden rounded-2xl bg-[#1c1c1e] ring-1 ring-white/[0.06]"
-        :class="phase === 'resetting' ? 'opacity-0 transition-opacity duration-500' : 'opacity-100 transition-opacity duration-500'"
+        :ref="setRef"
+        class="relative mx-auto w-full max-w-[380px] overflow-hidden rounded-2xl bg-[#1c1c1e] ring-1 ring-white/[0.06] transition-opacity duration-500"
+        :class="phase === 'idle' ? 'opacity-60' : 'opacity-100'"
     >
-        <!-- ============ INBOX VIEW ============ -->
+        <!-- INBOX VIEW -->
         <Transition
             enter-active-class="transition-all duration-400 ease-out"
             enter-from-class="opacity-0"
@@ -128,7 +107,6 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
             leave-to-class="opacity-0"
         >
             <div v-if="!showFullEmail(phase)" class="flex flex-col">
-                <!-- Inbox header -->
                 <div class="flex items-center justify-between border-b border-white/[0.08] px-4 pb-2.5 pt-4">
                     <div class="flex items-center gap-2">
                         <Mail class="h-4.5 w-4.5 text-[#007aff]" />
@@ -137,7 +115,6 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
                     <span class="text-[13px] text-[#98989d]">3 E-Mails</span>
                 </div>
 
-                <!-- Phishing email arriving -->
                 <Transition
                     enter-active-class="transition-all duration-400 ease-out"
                     enter-from-class="opacity-0 -translate-y-full max-h-0"
@@ -149,7 +126,7 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
                         :class="phase === 'email-opening' ? 'ring-1 ring-[#007aff]/20' : ''"
                     >
                         <div class="flex items-start gap-3">
-                            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" :class="phishingEmail.initialsColor">
+                            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#007aff]">
                                 <span class="text-[13px] font-semibold text-white">{{ phishingEmail.initials }}</span>
                             </div>
                             <div class="min-w-0 flex-1">
@@ -165,7 +142,6 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
                     </div>
                 </Transition>
 
-                <!-- Existing emails -->
                 <div
                     v-for="(email, index) in inboxEmails"
                     :key="email.id"
@@ -186,35 +162,26 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
                         </div>
                     </div>
                 </div>
-
-                <!-- Bottom padding -->
                 <div class="h-3" />
             </div>
         </Transition>
 
-        <!-- ============ FULL EMAIL VIEW ============ -->
+        <!-- FULL EMAIL VIEW -->
         <Transition
             enter-active-class="transition-all duration-400 ease-out"
             enter-from-class="opacity-0 translate-y-4"
             enter-to-class="opacity-100 translate-y-0"
-            leave-active-class="transition-all duration-300 ease-in"
-            leave-from-class="opacity-100"
-            leave-to-class="opacity-0"
         >
             <div v-if="showFullEmail(phase)" class="flex flex-col">
-                <!-- Email header bar -->
                 <div class="flex items-center gap-2 border-b border-white/[0.08] px-3 pb-2.5 pt-3">
                     <ChevronLeft class="h-5 w-5 text-[#007aff]" />
                     <span class="text-[15px] text-[#007aff]">Posteingang</span>
                 </div>
 
                 <div class="px-4 pt-4 pb-2">
-                    <!-- Subject -->
                     <h3 class="mb-3 text-[17px] leading-[1.3] font-semibold tracking-[-0.2px] text-[#f5f5f7]">
                         {{ phishingEmail.subject }}
                     </h3>
-
-                    <!-- Sender info -->
                     <div class="mb-4 flex items-start gap-3">
                         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#007aff]">
                             <span class="text-[14px] font-semibold text-white">MW</span>
@@ -222,10 +189,7 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
                         <div class="min-w-0 flex-1">
                             <p class="text-[14px] font-semibold text-[#f5f5f7]">{{ phishingEmail.sender }}</p>
                             <div class="relative">
-                                <p class="text-[12px] text-[#98989d]">
-                                    {{ phishingEmail.email }}
-                                </p>
-                                <!-- Annotation: sender domain -->
+                                <p class="text-[12px] text-[#98989d]">{{ phishingEmail.email }}</p>
                                 <Transition
                                     enter-active-class="transition-all duration-500 ease-out"
                                     enter-from-class="opacity-0 scale-95"
@@ -243,7 +207,6 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
                     </div>
                 </div>
 
-                <!-- Email body -->
                 <div class="border-t border-white/[0.06] px-4 pt-3 pb-4">
                     <div class="text-[13px] leading-[1.65] text-[#c7c7cc]">
                         <p class="mb-3">Sehr geehrte/r Mitarbeiter/in,</p>
@@ -252,18 +215,13 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
                             <span class="font-semibold text-[#f5f5f7]">weniger als 24 Stunden</span>
                             ab. Um eine Unterbrechung Ihres Zugangs zu verhindern, aktualisieren Sie Ihr Passwort bitte umgehend.
                         </p>
-                        <p class="mb-4">
-                            Bitte nutzen Sie den folgenden Link, um Ihr Passwort sicher zu erneuern:
-                        </p>
+                        <p class="mb-4">Bitte nutzen Sie den folgenden Link, um Ihr Passwort sicher zu erneuern:</p>
 
-                        <!-- CTA Button -->
                         <div class="relative mb-4">
                             <div class="inline-flex items-center gap-2 rounded-lg bg-[#0078d4] px-5 py-2.5 text-[14px] font-semibold text-white">
                                 <Shield class="h-4 w-4" />
                                 Passwort jetzt aktualisieren
                             </div>
-
-                            <!-- Annotation: suspicious URL -->
                             <Transition
                                 enter-active-class="transition-all duration-500 ease-out delay-200"
                                 enter-from-class="opacity-0 translate-y-1"
@@ -290,7 +248,6 @@ const showAnnotations = (p: AnimationPhase) => p === 'annotations-in';
                     </div>
                 </div>
 
-                <!-- Annotation summary badge -->
                 <Transition
                     enter-active-class="transition-all duration-600 ease-out delay-400"
                     enter-from-class="opacity-0 translate-y-2"

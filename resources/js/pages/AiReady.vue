@@ -27,6 +27,8 @@ import {
     Users,
     Zap,
 } from 'lucide-vue-next';
+import PhishingDemo from '@/components/PhishingDemo.vue';
+import IdeaGenerator from '@/components/IdeaGenerator.vue';
 
 const visible = ref(new Set<string>());
 let observer: IntersectionObserver | null = null;
@@ -62,7 +64,7 @@ function checkout() {
 <template>
     <div class="min-h-dvh bg-black font-sans text-[#f5f5f7] antialiased">
         <!-- HERO -->
-        <section class="relative flex min-h-dvh flex-col items-center justify-center px-5 pt-16 pb-12 text-center sm:px-8">
+        <section class="relative flex min-h-dvh flex-col items-center justify-center px-7 pt-16 pb-12 text-center sm:px-8">
             <div class="max-w-2xl">
                 <p class="mb-5 text-[13px] font-medium tracking-[0.1em] text-white/25 uppercase sm:text-[15px]">
                     AI Literacy &middot; AI Security &middot; EU AI Act
@@ -71,7 +73,7 @@ function checkout() {
                     Alle reden über KI.<br />
                     <span class="text-[#007aff]">Wir machen euer Team ready.</span>
                 </h1>
-                <p class="mx-auto mb-8 max-w-md text-[16px] leading-[1.6] text-white/45 sm:text-[19px]">
+                <p class="mx-auto mb-8 max-w-md text-[16px] leading-[1.6] text-white/55 sm:text-[19px]">
                     7 Hands-on Module. Interaktive Simulationen mit echtem AI-Backend.
                     Nicht zuschauen — selber machen.
                 </p>
@@ -99,7 +101,7 @@ function checkout() {
         <section
             id="bridge"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('bridge') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-xl text-center">
@@ -107,7 +109,7 @@ function checkout() {
                     Du warst beim Talk auf der Data Unplugged?
                     Oder hast unser Quiz gespielt?
                 </p>
-                <p class="text-[16px] leading-[1.65] text-white/45 sm:text-[18px]">
+                <p class="text-[16px] leading-[1.65] text-white/55 sm:text-[18px]">
                     Dann weißt du, wie sich das anfühlt: eine KI-Simulation, die dich fordert.
                     AI Ready bringt genau diese Erfahrung als komplettes Trainingsprogramm in dein Unternehmen.
                 </p>
@@ -125,7 +127,7 @@ function checkout() {
         <section
             id="problem"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('problem') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-2xl space-y-16 text-center sm:space-y-20">
@@ -165,14 +167,14 @@ function checkout() {
         <section
             id="about"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('about') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-2xl">
                 <p class="mb-8 text-[13px] font-medium tracking-[0.1em] text-white/20 uppercase">
                     Wer dahinter steht
                 </p>
-                <div class="space-y-5 text-[16px] leading-[1.7] text-white/55 sm:text-[18px]">
+                <div class="space-y-5 text-[16px] leading-[1.7] text-white/60 sm:text-[18px]">
                     <p>
                         Ich bin <span class="font-semibold text-white">Noel Lang</span>.
                         Gründer, Entwickler, Didaktiker.
@@ -210,7 +212,7 @@ function checkout() {
         <section
             id="product"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('product') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-2xl text-center">
@@ -255,7 +257,7 @@ function checkout() {
         <section
             id="track1"
             data-animate
-            class="px-5 py-16 transition-all duration-700 sm:px-8 sm:py-20"
+            class="px-7 py-16 transition-all duration-700 sm:px-8 sm:py-20"
             :class="isVisible('track1') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-3xl">
@@ -280,7 +282,7 @@ function checkout() {
                             </span>
                         </div>
                         <h4 class="mb-2 text-[16px] font-semibold">Prompt Lab</h4>
-                        <p class="mb-3 text-[14px] leading-[1.55] text-white/40">
+                        <p class="mb-3 text-[14px] leading-[1.55] text-white/50">
                             Eine Chat-UI, die wie ChatGPT aussieht. Geführte Szenarien, in denen dein Team lernt,
                             effektiv zu prompten. Aber auch: was passiert, wenn jemand eine Kundenliste in ein externes AI-Tool kopiert?
                         </p>
@@ -303,7 +305,7 @@ function checkout() {
                             </span>
                         </div>
                         <h4 class="mb-2 text-[16px] font-semibold">AI Fact-Check</h4>
-                        <p class="mb-3 text-[14px] leading-[1.55] text-white/40">
+                        <p class="mb-3 text-[14px] leading-[1.55] text-white/50">
                             Dein Team bekommt AI-generierte Reports, Zusammenfassungen und Analysen.
                             Manche sind korrekt, manche enthalten Halluzinationen.
                             Aufgabe: Finde die Fehler, bevor sie in die Entscheidung fließen.
@@ -327,7 +329,7 @@ function checkout() {
                             </span>
                         </div>
                         <h4 class="mb-2 text-[16px] font-semibold">AI Tools im Unternehmen</h4>
-                        <p class="mb-3 text-[14px] leading-[1.55] text-white/40">
+                        <p class="mb-3 text-[14px] leading-[1.55] text-white/50">
                             Welche AI-Systeme sind im Einsatz — Copilot, ChatGPT, Gemini?
                             Was darf man damit, was nicht? Shadow AI erkennen.
                             EU AI Act Risikoklassen verstehen. Firmenrichtlinien einordnen.
@@ -351,7 +353,7 @@ function checkout() {
                             </span>
                         </div>
                         <h4 class="mb-2 text-[16px] font-semibold">AI Agent Basics</h4>
-                        <p class="mb-3 text-[14px] leading-[1.55] text-white/40">
+                        <p class="mb-3 text-[14px] leading-[1.55] text-white/50">
                             In einer geführten Sandbox konfiguriert dein Team einen simplen AI-Agenten —
                             z.B. einen E-Mail-Zusammenfasser oder ein Meeting-Protokoll-Tool.
                             Kein Code, alles No-Code.
@@ -371,7 +373,7 @@ function checkout() {
         <section
             id="track2"
             data-animate
-            class="px-5 py-16 transition-all duration-700 sm:px-8 sm:py-20"
+            class="px-7 py-16 transition-all duration-700 sm:px-8 sm:py-20"
             :class="isVisible('track2') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-3xl">
@@ -396,7 +398,7 @@ function checkout() {
                             </span>
                         </div>
                         <h4 class="mb-2 text-[16px] font-semibold">Phishing Inbox</h4>
-                        <p class="mb-3 text-[14px] leading-[1.55] text-white/40">
+                        <p class="mb-3 text-[14px] leading-[1.55] text-white/50">
                             Ein Posteingang, der wie Outlook aussieht. Dein Team klassifiziert realistische E-Mails —
                             inklusive AI-generierter Spear-Phishing-Angriffe, die auf echten Szenarien basieren.
                         </p>
@@ -420,7 +422,7 @@ function checkout() {
                             </span>
                         </div>
                         <h4 class="mb-2 text-[16px] font-semibold">Deepfake Awareness</h4>
-                        <p class="mb-3 text-[14px] leading-[1.55] text-white/40">
+                        <p class="mb-3 text-[14px] leading-[1.55] text-white/50">
                             Deepfake-Videos und Voice-Clones erkennen: Echt oder generiert?
                             Inklusive Live-Demo, wie schnell ein Deepfake erstellt wird.
                         </p>
@@ -443,7 +445,7 @@ function checkout() {
                             </span>
                         </div>
                         <h4 class="mb-2 text-[16px] font-semibold">AI Data Leaks</h4>
-                        <p class="mb-3 text-[14px] leading-[1.55] text-white/40">
+                        <p class="mb-3 text-[14px] leading-[1.55] text-white/50">
                             Szenarien, in denen dein Team entscheidet: Darf ich diese Daten in ein AI-Tool eingeben?
                             Kundenverträge, Finanzdaten, Quellcode, Mitarbeiterdaten.
                         </p>
@@ -462,7 +464,7 @@ function checkout() {
         <section
             id="diff"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('diff') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-2xl">
@@ -471,15 +473,21 @@ function checkout() {
                         Kein Frontalunterricht.
                         Kein 5-Minuten-Video mit Quiz am Ende.
                     </p>
-                    <p class="mt-5 text-[16px] leading-[1.6] text-white/45 sm:text-[18px]">
+                    <p class="mt-5 text-[17px] leading-[1.6] text-white/55 sm:text-[19px]">
                         Eure Mitarbeitenden sitzen vor einer Chat-Simulation und prompten.
                         Vor einem Posteingang und erkennen Phishing.
                         Vor AI-Outputs und prüfen Fakten.
                     </p>
-                    <p class="mt-5 text-[17px] font-semibold text-white/75">
+                    <p class="mt-5 text-[18px] font-semibold text-white/75">
                         Sie tun etwas. Das ist der Unterschied.
                     </p>
                 </div>
+
+                <!-- Phishing Demo Animation -->
+                <div class="mb-12 flex justify-center">
+                    <PhishingDemo />
+                </div>
+
                 <div class="rounded-2xl bg-[#1c1c1e] p-5 ring-1 ring-white/[0.06] sm:p-8">
                     <div class="grid gap-8 sm:grid-cols-2">
                         <div>
@@ -511,7 +519,7 @@ function checkout() {
         <section
             id="reality"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('reality') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-2xl">
@@ -529,7 +537,7 @@ function checkout() {
                             <Quote class="h-3.5 w-3.5" />
                             &laquo;Unsere Leute kennen sich schon aus.&raquo;
                         </p>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
                             McKinseys internes KI-Team auch. Trotzdem wurde ihr AI-Chatbot in
                             <span class="font-semibold text-white/80">2 Stunden gehackt</span> —
                             46 Millionen Nachrichten exponiert.
@@ -537,8 +545,8 @@ function checkout() {
                             In Wirklichkeit hat 48% davon Sicherheitslücken.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://www.theregister.com/2026/03/09/mckinsey_ai_chatbot_hacked/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">The Register</a>
-                            <a href="https://snyk.io/reports/ai-code-security/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Snyk Developer Security Report</a>
+                            <a href="https://www.theregister.com/2026/03/09/mckinsey_ai_chatbot_hacked/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">The Register</a>
+                            <a href="https://snyk.io/reports/ai-code-security/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Snyk Developer Security Report</a>
                         </p>
                     </div>
 
@@ -548,15 +556,15 @@ function checkout() {
                             <Quote class="h-3.5 w-3.5" />
                             &laquo;Das betrifft nur die IT.&raquo;
                         </p>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
                             In Hongkong hat ein Mitarbeiter aus der Finanzabteilung
                             <span class="font-semibold text-white/80">25,6 Millionen Dollar überwiesen</span> —
                             nach einem Zoom-Call, in dem der CFO und alle Teilnehmer Deepfakes waren.
                             KI-Kompetenz ist kein IT-Thema. Es ist ein Unternehmensrisiko.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://www.weforum.org/stories/2025/02/deepfake-fraud-how-ai-is-being-weaponized/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">World Economic Forum</a>
-                            <a href="https://www.cfodive.com/news/arup-deepfake-fraud-hong-kong-25-million/707666/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">CFO Dive</a>
+                            <a href="https://www.weforum.org/stories/2025/02/deepfake-fraud-how-ai-is-being-weaponized/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">World Economic Forum</a>
+                            <a href="https://www.cfodive.com/news/arup-deepfake-fraud-hong-kong-25-million/707666/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">CFO Dive</a>
                         </p>
                     </div>
 
@@ -566,7 +574,7 @@ function checkout() {
                             <Quote class="h-3.5 w-3.5" />
                             &laquo;Ein kurzes E-Learning reicht doch.&raquo;
                         </p>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
                             Replits KI-Agent löschte eine Produktionsdatenbank mit 1.200 Führungskräften,
                             erzeugte <span class="font-semibold text-white/80">4.000 Fake-Profile zur Vertuschung</span>,
                             fälschte Testergebnisse — und log anschließend darüber.
@@ -574,8 +582,8 @@ function checkout() {
                             Das lernst du nicht aus einem 5-Minuten-Video.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Fortune</a>
-                            <a href="https://gizmodo.com/replits-ai-agent-wipes-companys-codebase-during-vibecoding-session-2000633176" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Gizmodo</a>
+                            <a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Fortune</a>
+                            <a href="https://gizmodo.com/replits-ai-agent-wipes-companys-codebase-during-vibecoding-session-2000633176" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Gizmodo</a>
                         </p>
                     </div>
 
@@ -585,7 +593,7 @@ function checkout() {
                             <Quote class="h-3.5 w-3.5" />
                             &laquo;KI-Risiken sind übertrieben.&raquo;
                         </p>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
                             Alibabas KI-Agent hat
                             <span class="font-semibold text-white/80">eigenständig angefangen, Kryptowährung zu schürfen</span> —
                             während eines Trainings, ohne Anweisung, und versuchte, seine Sandbox über einen
@@ -593,8 +601,8 @@ function checkout() {
                             KI-bezogene Kriminalität ist im letzten Jahr um 1.500% gestiegen.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://t3n.de/news/alibaba-rome-ki-agent-krypto-1734000/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">t3n</a>
-                            <a href="https://flashpoint.io/blog/global-threat-intelligence-report-2026/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Global Threat Intelligence Report 2026</a>
+                            <a href="https://t3n.de/news/alibaba-rome-ki-agent-krypto-1734000/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">t3n</a>
+                            <a href="https://flashpoint.io/blog/global-threat-intelligence-report-2026/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Global Threat Intelligence Report 2026</a>
                         </p>
                     </div>
 
@@ -604,7 +612,7 @@ function checkout() {
                             <Quote class="h-3.5 w-3.5" />
                             &laquo;Das hat noch Zeit.&raquo;
                         </p>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
                             EU AI Act, Artikel 4: Behördliche Durchsetzung ab
                             <span class="font-semibold text-[#ff9f0a]">August 2026</span>.
                             Bußgelder bis 35 Millionen Euro oder 7% des weltweiten Jahresumsatzes.
@@ -612,8 +620,8 @@ function checkout() {
                             aber nur 34% haben Kontrollen. 31% wissen nicht mal, ob sie einen AI-Breach hatten.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://artificialintelligenceact.eu/article/4/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">EU AI Act, Artikel 4</a>
-                            <a href="https://hiddenlayer.com/research/ai-threat-landscape-report-2026/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">HiddenLayer AI Threat Report 2026</a>
+                            <a href="https://artificialintelligenceact.eu/article/4/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">EU AI Act, Artikel 4</a>
+                            <a href="https://hiddenlayer.com/research/ai-threat-landscape-report-2026/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">HiddenLayer AI Threat Report 2026</a>
                         </p>
                     </div>
                 </div>
@@ -624,7 +632,7 @@ function checkout() {
         <section
             id="potential"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('potential') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-2xl">
@@ -645,15 +653,15 @@ function checkout() {
                             <HeartPulse class="h-4.5 w-4.5 text-[#34c759]" />
                             <p class="text-[13px] font-medium text-[#34c759]/70">Medizin</p>
                         </div>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
                             Ein KI-Bluttest erkennt <span class="font-semibold text-white/80">12 Krebsarten mit 99% Genauigkeit</span>
                             aus 10 Tropfen Blut — teilweise Jahre bevor Symptome auftreten.
                             Ein einziges Krankenhaus in Tampa hat mit KI-gestützter Sepsis-Erkennung
                             über 700 Leben gerettet und 100 Millionen Dollar eingespart.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://www.southampton.ac.uk/news/2025/cancer-blood-test" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">University of Southampton</a>
-                            <a href="https://www.beckershospitalreview.com/innovation/tampa-general-ai-sepsis-700-lives/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Becker's Hospital Review</a>
+                            <a href="https://www.southampton.ac.uk/news/2025/cancer-blood-test" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">University of Southampton</a>
+                            <a href="https://www.beckershospitalreview.com/innovation/tampa-general-ai-sepsis-700-lives/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Becker's Hospital Review</a>
                         </p>
                     </div>
 
@@ -663,16 +671,16 @@ function checkout() {
                             <Sparkles class="h-4.5 w-4.5 text-[#007aff]" />
                             <p class="text-[13px] font-medium text-[#007aff]/70">Wissenschaft</p>
                         </div>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
                             AlphaFold hat die Struktur von <span class="font-semibold text-white/80">200 Millionen Proteinen</span>
                             vorhergesagt — Nobelpreis für Chemie 2024.
                             3 Millionen Forscher in 190 Ländern nutzen es.
                             Das erste KI-designte Medikament zeigt Ergebnisse in 30 Monaten statt 10+ Jahren.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://deepmind.google/technologies/alphafold/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">DeepMind</a>
-                            <a href="https://www.nature.com/articles/s41591-025-03450-4" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Nature Medicine</a>
-                            <a href="https://www.nobelprize.org/prizes/chemistry/2024/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Nobelpreis Chemie 2024</a>
+                            <a href="https://deepmind.google/technologies/alphafold/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">DeepMind</a>
+                            <a href="https://www.nature.com/articles/s41591-025-03450-4" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Nature Medicine</a>
+                            <a href="https://www.nobelprize.org/prizes/chemistry/2024/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Nobelpreis Chemie 2024</a>
                         </p>
                     </div>
 
@@ -682,33 +690,33 @@ function checkout() {
                             <TrendingUp class="h-4.5 w-4.5 text-[#007aff]" />
                             <p class="text-[13px] font-medium text-[#007aff]/70">Produktivität</p>
                         </div>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
                             GitHub Copilot: <span class="font-semibold text-white/80">56% schnellere Aufgaben</span>,
                             PR-Zyklen von 9,6 auf 2,4 Tage.
                             Googles AI Co-Scientist reproduzierte eine jahrelange Forschungshypothese in Tagen.
                             Digitale Kreativteams arbeiten 60% schneller bei 40% höheren Margen.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">GitHub / Microsoft Research</a>
-                            <a href="https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Google Research</a>
+                            <a href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">GitHub / Microsoft Research</a>
+                            <a href="https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Google Research</a>
                         </p>
                     </div>
 
-                    <!-- Agenten -->
+                    <!-- Agenten & Produktivität -->
                     <div class="rounded-2xl bg-[#1c1c1e] p-5 ring-1 ring-white/[0.06] sm:p-6">
                         <div class="mb-3 flex items-center gap-2.5">
-                            <ShieldAlert class="h-4.5 w-4.5 text-[#ff9f0a]" />
-                            <p class="text-[13px] font-medium text-[#ff9f0a]/70">KI-Agenten</p>
+                            <Bot class="h-4.5 w-4.5 text-[#007aff]" />
+                            <p class="text-[13px] font-medium text-[#007aff]/70">KI-Agenten im Einsatz</p>
                         </div>
-                        <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
-                            Auf RentAHuman.ai stellen <span class="font-semibold text-white/80">KI-Agenten jetzt Menschen ein</span> —
-                            posten Jobs, setzen Preise, bezahlen per Crypto. Publiziert in Nature.
-                            Und in Unternehmen haben 40% der KI-Agenten Schreibzugriff auf E-Mails,
-                            25% auf Code-Repositories.
+                        <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
+                            GitHub Copilot verkürzt Entwicklungszyklen um <span class="font-semibold text-white/80">75%</span>.
+                            Googles AI Co-Scientist reproduzierte jahrelange Forschung in Tagen.
+                            Und KI-Agenten automatisieren bereits jetzt Aufgaben von der E-Mail-Triage
+                            bis zur Vertragsanalyse — wenn das Team weiß, wie man sie richtig einsetzt.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://www.nature.com/articles/d41586-026-00454-7" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Nature</a>
-                            <a href="https://www.paloaltonetworks.com/blog/2025/12/cybersecurity-predictions-2026/" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Palo Alto Networks</a>
+                            <a href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">GitHub / Microsoft Research</a>
+                            <a href="https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Google Research</a>
                         </p>
                     </div>
                 </div>
@@ -728,7 +736,7 @@ function checkout() {
         <section
             id="included"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('included') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-2xl">
@@ -858,7 +866,7 @@ function checkout() {
         <section
             id="angebot"
             data-animate
-            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
             :class="isVisible('angebot') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
         >
             <div class="mx-auto max-w-lg text-center">
@@ -909,7 +917,7 @@ function checkout() {
         </section>
 
         <!-- WAS DRIN IST — SUMMARY -->
-        <section class="px-5 py-12 sm:px-8">
+        <section class="px-7 py-12 sm:px-8">
             <div class="mx-auto max-w-lg">
                 <div class="rounded-2xl bg-[#1c1c1e] p-5 ring-1 ring-white/[0.06] sm:p-6">
                     <p class="mb-4 text-[14px] font-semibold sm:text-[15px]">Zusammengefasst — das ist drin:</p>
@@ -973,7 +981,7 @@ function checkout() {
         </section>
 
         <!-- FINAL CTA -->
-        <section class="px-5 pt-12 pb-24 sm:px-8 sm:pb-32">
+        <section class="px-7 pt-12 pb-24 sm:px-8 sm:pb-32">
             <div class="mx-auto max-w-lg text-center">
                 <p class="mb-6 text-[22px] leading-[1.35] font-bold tracking-[-0.3px] sm:text-[28px]">
                     Die KI ersetzt keine Kompetenz.<br />
@@ -1002,7 +1010,7 @@ function checkout() {
         </section>
 
         <!-- FOOTER -->
-        <footer class="border-t border-white/[0.06] px-5 py-10 sm:px-8 sm:py-12">
+        <footer class="border-t border-white/[0.06] px-7 py-10 sm:px-8 sm:py-12">
             <div class="mx-auto max-w-2xl text-center text-[13px] text-white/20 sm:text-[14px]">
                 <p class="font-medium text-white/30">Noel Lang</p>
                 <p class="mt-1.5">

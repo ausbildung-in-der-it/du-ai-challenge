@@ -162,9 +162,16 @@ class JourneySeeder extends Seeder
         ]);
 
         // ── Block 8: Learn — Licht & Schatten ─────────────
-        $this->learn($journey, $pos++, 'Licht und Schatten', "Die letzten beiden Karten zeigen das Spektrum: Krebs 10 Jahre früher erkennen — oder 3 Millionen Deepfakes in 11 Tagen generieren.\n\nKI hat keinen moralischen Kompass. Sie verstärkt, was wir ihr geben. 46% des neuen Codes weltweit ist KI-generiert, aber KI-Code hat eine 2,74x höhere Sicherheitslücken-Rate.\n\nDie Frage ist nicht ob KI mächtig ist — sondern wer die Leitplanken setzt.", 'scale');
+        $this->learn($journey, $pos++, 'Licht und Schatten', "Die letzten beiden Karten zeigen das Spektrum: Krebs 10 Jahre früher erkennen — oder 3 Millionen Deepfakes in 11 Tagen generieren.\n\nKI hat keinen moralischen Kompass. Sie verstärkt, was wir ihr geben.\n\nDie Frage ist nicht ob KI mächtig ist — sondern wer die Leitplanken setzt.", 'scale');
 
-        // ── Block 9: Quiz (2) — Finale ────────────────────
+        // ── Block 9: Speech — Transcription ausprobieren ──
+        JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'speech',
+            'position' => $pos++,
+        ]);
+
+        // ── Block 10: Quiz (2) — Finale ───────────────────
         $block = $this->quizBlock($journey, $pos++);
 
         QuizCard::create([
@@ -194,7 +201,7 @@ class JourneySeeder extends Seeder
         ]);
 
         // ── Block 10: Learn — Abschluss ───────────────────
-        $this->learn($journey, $pos++, 'Erst formen wir unsere Werkzeuge — dann formen sie uns', "John M. Culkin, 1967. Jeder Werkzeugsprung hat nicht das Tempo verändert, sondern die Ebene.\n\nMit KI-Agenten formulieren wir Ziele — die Maschine findet den Weg. GPT-5 Training kostet 500 Mio. Dollar. Eine KI-Anfrage verbraucht eine Flasche Wasser. Irland nutzt 32% seiner Elektrizität für Rechenzentren.\n\nKI-Kompetenz ist seit Februar 2025 durch den EU AI Act gesetzliche Pflicht. Ab August 2026 wird durchgesetzt.\n\nDie Frage ist nicht ob KI deine Arbeit verändert. Sondern ob du die Veränderung gestaltest.", 'sparkles');
+        $this->learn($journey, $pos++, 'Erst formen wir unsere Werkzeuge — dann formen sie uns', "John M. Culkin, 1967. Jeder Werkzeugsprung hat nicht das Tempo verändert, sondern die Ebene.\n\nMit KI-Agenten formulieren wir Ziele — die Maschine findet den Weg. Das Training von GPT-5 kostet 500 Millionen Dollar. Eine einzige KI-Anfrage verbraucht so viel Wasser wie eine Flasche. Irland nutzt 32 Prozent seiner Elektrizität für Rechenzentren.\n\nKI-Kompetenz ist seit Februar 2025 durch den EU AI Act gesetzliche Pflicht. Ab August 2026 wird durchgesetzt.\n\nDie Frage ist nicht ob KI deine Arbeit verändert. Sondern ob du die Veränderung gestaltest.", 'sparkles');
     }
 
     private function learn(LearningJourney $journey, int $position, string $title, string $content, string $icon): void

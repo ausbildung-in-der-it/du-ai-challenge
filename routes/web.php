@@ -3,8 +3,10 @@
 use App\Http\Controllers\AiCompareController;
 use App\Http\Controllers\AiReadyController;
 use App\Http\Controllers\CommentaryController;
+use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\JourneyController;
 use App\Http\Controllers\JourneySessionController;
+use App\Http\Controllers\TranscriptionController;
 use App\Models\JourneySession;
 use App\Models\LearningJourney;
 use Illuminate\Support\Facades\Route;
@@ -30,8 +32,16 @@ Route::post('/api/sessions/{journeySession}/commentaries', [CommentaryController
 Route::get('/api/sessions/{journeySession}/commentaries/{commentary}', [CommentaryController::class, 'show'])->name('commentaries.show');
 Route::get('/api/sessions/{journeySession}/cards/{quizCard}/commentary', [CommentaryController::class, 'latest'])->name('commentaries.latest');
 
+// Transcription API
+Route::post('/api/transcribe', [TranscriptionController::class, 'transcribe'])->name('transcribe');
+Route::post('/api/transcribe/react', [TranscriptionController::class, 'react'])->name('transcribe.react');
+
 // AI Compare (multi-provider evaluation)
 Route::post('/api/ai-compare/stream', [AiCompareController::class, 'stream'])->name('ai-compare.stream');
+
+// AI Idea Generator
+Route::post('/api/ai-ready/transcribe', [IdeaController::class, 'transcribe'])->name('ai-ready.transcribe');
+Route::post('/api/ai-ready/generate', [IdeaController::class, 'generate'])->name('ai-ready.generate');
 
 // Dev: reset all sessions for a journey
 Route::get('/journey/{journey:slug}/reset', function (LearningJourney $journey) {
