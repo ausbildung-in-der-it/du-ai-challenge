@@ -703,8 +703,8 @@ function checkout() {
                         <p class="text-[15px] leading-[1.6] text-white/55 sm:text-[16px]">
                             Auf RentAHuman.ai stellen <span class="font-semibold text-white/80">KI-Agenten jetzt Menschen ein</span> —
                             posten Jobs, setzen Preise, bezahlen per Crypto. Publiziert in Nature.
-                            In Unternehmen kommen auf jeden Menschen bereits 82 KI-Agenten.
-                            40% haben Schreibzugriff auf E-Mails, 25% auf Code-Repositories.
+                            Und in Unternehmen haben 40% der KI-Agenten Schreibzugriff auf E-Mails,
+                            25% auf Code-Repositories.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
                             <a href="https://www.nature.com/articles/d41586-026-00454-7" target="_blank" rel="noopener" class="text-white/25 underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">Nature</a>
