@@ -12,8 +12,14 @@ import {
     RotateCcw,
 } from 'lucide-vue-next';
 import { ref, computed, onUnmounted } from 'vue';
+import { marked } from 'marked';
 
 import { useStreamText } from '@/composables/useStreamText';
+
+marked.setOptions({
+    breaks: true,
+    gfm: true,
+});
 
 const prompt = ref('');
 const stream = useStreamText();
@@ -201,47 +207,8 @@ function reset() {
     hasGenerated.value = false;
 }
 
-// --- Simple markdown rendering ---
 function renderMarkdown(text: string): string {
-    const html = text
-        // Escape HTML
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        // Bold
-        .replace(
-            /\*\*(.+?)\*\*/g,
-            '<strong class="text-white/90 font-semibold">$1</strong>',
-        )
-        // Italic
-        .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
-        // Headings
-        .replace(
-            /^### (.+)$/gm,
-            '<h4 class="text-[16px] font-semibold text-white/85 mt-5 mb-2">$1</h4>',
-        )
-        .replace(
-            /^## (.+)$/gm,
-            '<h3 class="text-[18px] font-bold text-white/90 mt-6 mb-2">$1</h3>',
-        )
-        // Unordered list items
-        .replace(
-            /^[-*] (.+)$/gm,
-            '<li class="flex gap-2 items-start"><span class="text-[#007aff] mt-1.5 shrink-0 text-[8px]">●</span><span>$1</span></li>',
-        )
-        // Ordered list items
-        .replace(
-            /^(\d+)\. (.+)$/gm,
-            '<li class="flex gap-2 items-start"><span class="text-[#007aff] font-semibold shrink-0 min-w-[1.2em]">$1.</span><span>$2</span></li>',
-        )
-        // Horizontal rules
-        .replace(/^---$/gm, '<hr class="border-white/[0.08] my-4" />')
-        // Line breaks (double newline = paragraph break)
-        .replace(/\n\n/g, '</p><p class="mb-3">')
-        // Single newlines
-        .replace(/\n/g, '<br />');
-
-    return `<p class="mb-3">${html}</p>`;
+    return marked.parse(text) as string;
 }
 </script>
 
@@ -459,23 +426,88 @@ function renderMarkdown(text: string): string {
 </template>
 
 <style scoped>
-.idea-content :deep(li) {
-    margin-bottom: 0.4rem;
-}
-
-.idea-content :deep(h3),
-.idea-content :deep(h4) {
-    margin-top: 1.25rem;
+.idea-content :deep(h2),
+.idea-content :deep(h3) {
+    font-size: 18px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 1.5rem;
     margin-bottom: 0.5rem;
 }
 
+.idea-content :deep(h4) {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 1.25rem;
+    margin-bottom: 0.4rem;
+}
+
+.idea-content :deep(h2:first-child),
 .idea-content :deep(h3:first-child),
 .idea-content :deep(h4:first-child),
 .idea-content :deep(p:first-child) {
     margin-top: 0;
 }
 
+.idea-content :deep(p) {
+    margin-bottom: 0.75rem;
+}
+
+.idea-content :deep(strong) {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+}
+
+.idea-content :deep(ul),
+.idea-content :deep(ol) {
+    margin-bottom: 0.75rem;
+    padding-left: 1.25rem;
+}
+
+.idea-content :deep(li) {
+    margin-bottom: 0.35rem;
+}
+
+.idea-content :deep(li::marker) {
+    color: #007aff;
+}
+
 .idea-content :deep(hr) {
+    border-color: rgba(255, 255, 255, 0.08);
     margin: 1rem 0;
+}
+
+.idea-content :deep(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 13px;
+}
+
+.idea-content :deep(th) {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.idea-content :deep(td) {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.idea-content :deep(tr:last-child td) {
+    border-bottom: none;
+}
+
+.idea-content :deep(code) {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
 }
 </style>

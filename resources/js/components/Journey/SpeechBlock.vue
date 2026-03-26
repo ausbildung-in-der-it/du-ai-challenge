@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue';
-import { Mic, MicOff, ChevronRight, Sparkles, AudioLines } from 'lucide-vue-next';
+import { Mic, Square, ChevronRight, Sparkles, AudioLines } from 'lucide-vue-next';
 import { useStreamText } from '@/composables/useStreamText';
 
 defineEmits<{ next: [] }>();
@@ -10,12 +10,15 @@ type Phase = 'intro' | 'recording' | 'transcribing' | 'reacting' | 'done';
 const phase = ref<Phase>('intro');
 const transcript = ref('');
 const aiReaction = useStreamText();
+const bars = ref<number[]>(new Array(24).fill(4));
+const recordingTime = ref(0);
 
 let mediaRecorder: MediaRecorder | null = null;
 let audioChunks: Blob[] = [];
 let analyser: AnalyserNode | null = null;
+let audioCtx: AudioContext | null = null;
 let animFrame: number | null = null;
-const canvasRef = ref<HTMLCanvasElement | null>(null);
+let timerInterval: ReturnType<typeof setInterval> | null = null;
 
 function getXsrfToken(): string {
     return document.cookie
@@ -30,33 +33,42 @@ async function startRecording() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         phase.value = 'recording';
         audioChunks = [];
+        recordingTime.value = 0;
 
-        // Waveform visualization
-        const audioCtx = new AudioContext();
+        // Audio analysis for bars
+        audioCtx = new AudioContext();
         const source = audioCtx.createMediaStreamSource(stream);
         analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 256;
+        analyser.fftSize = 64;
+        analyser.smoothingTimeConstant = 0.7;
         source.connect(analyser);
-        drawWaveform();
+        updateBars();
 
-        mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        // Timer
+        timerInterval = setInterval(() => recordingTime.value++, 1000);
+
+        // Use audio/mp4 if available, fallback to audio/webm
+        const mimeType = MediaRecorder.isTypeSupported('audio/mp4')
+            ? 'audio/mp4'
+            : MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+                ? 'audio/webm;codecs=opus'
+                : 'audio/webm';
+
+        mediaRecorder = new MediaRecorder(stream, { mimeType });
         mediaRecorder.ondataavailable = (e) => {
             if (e.data.size > 0) audioChunks.push(e.data);
         };
         mediaRecorder.onstop = async () => {
             stream.getTracks().forEach((t) => t.stop());
-            if (animFrame) cancelAnimationFrame(animFrame);
-            audioCtx.close();
-
+            cleanup();
             phase.value = 'transcribing';
-            await transcribeAudio();
+            await transcribeAudio(mimeType);
         };
 
-        mediaRecorder.start();
+        mediaRecorder.start(250); // collect chunks every 250ms
     } catch {
-        // Mic permission denied — skip gracefully
         phase.value = 'done';
-        transcript.value = '(Mikrofon nicht verfügbar)';
+        transcript.value = '(Mikrofon nicht verfügbar — bitte Berechtigung erteilen)';
     }
 }
 
@@ -64,51 +76,45 @@ function stopRecording() {
     mediaRecorder?.stop();
 }
 
-function drawWaveform() {
-    const canvas = canvasRef.value;
-    if (!canvas || !analyser) return;
+function updateBars() {
+    if (!analyser) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const data = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(data);
 
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    function draw() {
-        if (!analyser || !ctx || !canvas) return;
-        animFrame = requestAnimationFrame(draw);
-
-        analyser.getByteTimeDomainData(dataArray);
-
-        ctx.fillStyle = 'rgba(0, 0, 0, 0)';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#007aff';
-        ctx.beginPath();
-
-        const sliceWidth = canvas.width / bufferLength;
-        let x = 0;
-
-        for (let i = 0; i < bufferLength; i++) {
-            const v = dataArray[i] / 128.0;
-            const y = (v * canvas.height) / 2;
-            if (i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-            x += sliceWidth;
-        }
-
-        ctx.lineTo(canvas.width, canvas.height / 2);
-        ctx.stroke();
+    // Map frequency bins to 24 bars
+    const newBars: number[] = [];
+    const step = Math.floor(data.length / 24);
+    for (let i = 0; i < 24; i++) {
+        const val = data[i * step] ?? 0;
+        // Scale: min 4px, max 48px
+        newBars.push(4 + (val / 255) * 44);
     }
+    bars.value = newBars;
 
-    draw();
+    animFrame = requestAnimationFrame(updateBars);
 }
 
-async function transcribeAudio() {
-    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+function cleanup() {
+    if (animFrame) cancelAnimationFrame(animFrame);
+    if (timerInterval) clearInterval(timerInterval);
+    audioCtx?.close();
+    animFrame = null;
+    timerInterval = null;
+    bars.value = new Array(24).fill(4);
+}
+
+function formatTime(s: number): string {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+async function transcribeAudio(mimeType: string) {
+    const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+    const blob = new Blob(audioChunks, { type: mimeType });
     const formData = new FormData();
-    formData.append('audio', blob, 'recording.webm');
+    formData.append('audio', blob, `recording.${ext}`);
 
     try {
         const res = await fetch('/api/transcribe', {
@@ -122,11 +128,14 @@ async function transcribeAudio() {
             body: formData,
         });
 
-        if (!res.ok) throw new Error('Transcription failed');
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || 'Transcription failed');
+        }
         const data = await res.json();
         transcript.value = data.text || '(Kein Text erkannt)';
-    } catch {
-        transcript.value = '(Transkription fehlgeschlagen)';
+    } catch (e) {
+        transcript.value = '(Transkription fehlgeschlagen — bitte erneut versuchen)';
     }
 
     // Stream AI reaction
@@ -136,7 +145,7 @@ async function transcribeAudio() {
 }
 
 onUnmounted(() => {
-    if (animFrame) cancelAnimationFrame(animFrame);
+    cleanup();
     mediaRecorder?.stream?.getTracks().forEach((t) => t.stop());
 });
 </script>
@@ -155,49 +164,56 @@ onUnmounted(() => {
                     </h2>
 
                     <p class="mb-5 text-[15px] leading-[1.6] text-[#86868b] dark:text-[#98989d]">
-                        Ein Mensch tippt ~40 Wörter pro Minute. Sprechend sind es ~150. KI transkribiert 1 Stunde Audio in unter 10 Sekunden. Probier's aus.
+                        Ein Mensch tippt ~40 Wörter pro Minute. Sprechend: ~150. KI transkribiert 1 Stunde Audio in unter 10 Sekunden. Probier's aus.
                     </p>
 
                     <!-- Intro: Mic button -->
-                    <div v-if="phase === 'intro'" class="flex justify-center py-6">
+                    <div v-if="phase === 'intro'" class="flex flex-col items-center gap-3 py-6">
                         <button
                             class="flex h-20 w-20 cursor-pointer items-center justify-center rounded-full bg-[#007aff] shadow-lg shadow-[#007aff]/25 transition-all active:scale-[0.93]"
                             @click="startRecording"
                         >
                             <Mic class="h-8 w-8 text-white" />
                         </button>
+                        <span class="text-[13px] text-[#86868b] dark:text-[#98989d]">Tippen zum Aufnehmen</span>
                     </div>
 
-                    <!-- Recording: Waveform + Stop -->
+                    <!-- Recording: Audio bars + Stop -->
                     <div v-else-if="phase === 'recording'" class="py-4">
-                        <canvas
-                            ref="canvasRef"
-                            width="300"
-                            height="60"
-                            class="mx-auto mb-4 block w-full rounded-xl"
-                        />
-                        <div class="flex justify-center">
+                        <!-- Audio level bars -->
+                        <div class="mb-4 flex h-12 items-center justify-center gap-[3px]">
+                            <div
+                                v-for="(h, i) in bars"
+                                :key="i"
+                                class="w-[6px] rounded-full bg-[#007aff] transition-[height] duration-75"
+                                :style="{ height: h + 'px' }"
+                            />
+                        </div>
+
+                        <!-- Timer -->
+                        <p class="mb-4 text-center text-[28px] font-light tracking-wider text-[#1d1d1f] tabular-nums dark:text-[#f5f5f7]">
+                            {{ formatTime(recordingTime) }}
+                        </p>
+
+                        <div class="flex flex-col items-center gap-3">
                             <button
                                 class="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-[#ff3b30] shadow-lg shadow-[#ff3b30]/25 transition-all active:scale-[0.93]"
                                 @click="stopRecording"
                             >
-                                <MicOff class="h-6 w-6 text-white" />
+                                <Square class="h-5 w-5 fill-white text-white" />
                             </button>
+                            <span class="text-[13px] text-[#86868b] dark:text-[#98989d]">Tippen zum Stoppen</span>
                         </div>
-                        <p class="mt-3 text-center text-[13px] text-[#86868b] dark:text-[#98989d]">
-                            Aufnahme läuft... Tippe zum Stoppen.
-                        </p>
                     </div>
 
-                    <!-- Transcribing -->
-                    <div v-else-if="phase === 'transcribing'" class="flex items-center justify-center gap-3 py-8">
-                        <div class="h-5 w-5 animate-spin rounded-full border-2 border-[#007aff] border-t-transparent" />
-                        <span class="text-[15px] text-[#86868b] dark:text-[#98989d]">Transkribiere...</span>
+                    <!-- Transcribing spinner -->
+                    <div v-else-if="phase === 'transcribing'" class="flex flex-col items-center gap-3 py-8">
+                        <div class="h-6 w-6 animate-spin rounded-full border-2 border-[#ff9f0a] border-t-transparent" />
+                        <span class="text-[15px] text-[#86868b] dark:text-[#98989d]">Transkribiere via ElevenLabs...</span>
                     </div>
 
-                    <!-- Transcript + AI Reaction -->
+                    <!-- Result: Transcript + AI Reaction -->
                     <div v-else class="space-y-4">
-                        <!-- Transcript -->
                         <div class="rounded-xl bg-[#f5f5f7] p-4 dark:bg-[#2c2c2e]">
                             <p class="mb-1 text-[11px] font-bold tracking-wider text-[#86868b] uppercase dark:text-[#98989d]">
                                 Dein Text (Speech-to-Text)
@@ -207,7 +223,6 @@ onUnmounted(() => {
                             </p>
                         </div>
 
-                        <!-- AI Reaction (streamed) -->
                         <div v-if="aiReaction.text.value || aiReaction.isLoading.value" class="flex items-start gap-2">
                             <Sparkles class="mt-0.5 h-4 w-4 shrink-0 text-[#ff9f0a] opacity-60" />
                             <p class="text-[14px] leading-[1.5] text-[#86868b] italic dark:text-[#98989d]">
@@ -222,7 +237,6 @@ onUnmounted(() => {
             </div>
         </div>
 
-        <!-- Action -->
         <div class="shrink-0 px-5 pb-5">
             <button
                 v-if="phase === 'done'"

@@ -684,39 +684,40 @@ function checkout() {
                         </p>
                     </div>
 
-                    <!-- Produktivität -->
+                    <!-- Produktivität & ROI -->
                     <div class="rounded-2xl bg-[#1c1c1e] p-5 ring-1 ring-white/[0.06] sm:p-6">
                         <div class="mb-3 flex items-center gap-2.5">
                             <TrendingUp class="h-4.5 w-4.5 text-[#007aff]" />
-                            <p class="text-[13px] font-medium text-[#007aff]/70">Produktivität</p>
+                            <p class="text-[13px] font-medium text-[#007aff]/70">Produktivität &amp; ROI</p>
                         </div>
                         <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
-                            GitHub Copilot: <span class="font-semibold text-white/80">56% schnellere Aufgaben</span>,
-                            PR-Zyklen von 9,6 auf 2,4 Tage.
-                            Googles AI Co-Scientist reproduzierte eine jahrelange Forschungshypothese in Tagen.
-                            Digitale Kreativteams arbeiten 60% schneller bei 40% höheren Margen.
+                            Microsoft 365 Copilot liefert KMUs <span class="font-semibold text-white/80">bis zu 353% ROI</span> —
+                            108 Stunden pro Nutzer pro Jahr eingespart.
+                            GitHub Copilot verkürzt PR-Zyklen von 9,6 auf 2,4 Tage.
+                            In Deutschland sind über 570.000 Fachkräftestellen unbesetzt.
+                            KI ist der einzige Hebel, der sofort wirkt.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">GitHub / Microsoft Research</a>
-                            <a href="https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Google Research</a>
+                            <a href="https://www.microsoft.com/en-us/microsoft-365/blog/2024/10/17/microsoft-365-copilot-drove-up-to-353-roi-for-small-and-medium-businesses-new-study/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Forrester / Microsoft</a>
+                            <a href="https://www.iwkoeln.de/studien/gero-kunath-jurek-tiedemann-fachkraeftereport-maerz-2025.html" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">IW Köln Fachkräftereport</a>
                         </p>
                     </div>
 
-                    <!-- Agenten & Produktivität -->
+                    <!-- KI-Adoption Deutschland -->
                     <div class="rounded-2xl bg-[#1c1c1e] p-5 ring-1 ring-white/[0.06] sm:p-6">
                         <div class="mb-3 flex items-center gap-2.5">
                             <Bot class="h-4.5 w-4.5 text-[#007aff]" />
-                            <p class="text-[13px] font-medium text-[#007aff]/70">KI-Agenten im Einsatz</p>
+                            <p class="text-[13px] font-medium text-[#007aff]/70">Deutschland &amp; KI-Agenten</p>
                         </div>
                         <p class="text-[15px] leading-[1.6] text-white/65 sm:text-[16px]">
-                            GitHub Copilot verkürzt Entwicklungszyklen um <span class="font-semibold text-white/80">75%</span>.
-                            Googles AI Co-Scientist reproduzierte jahrelange Forschung in Tagen.
-                            Und KI-Agenten automatisieren bereits jetzt Aufgaben von der E-Mail-Triage
-                            bis zur Vertragsanalyse — wenn das Team weiß, wie man sie richtig einsetzt.
+                            <span class="font-semibold text-white/80">36% der deutschen Unternehmen</span> nutzen KI aktiv —
+                            Verdopplung in einem Jahr. Gartner prognostiziert: Bis Ende 2026 haben
+                            40% aller Enterprise-Apps KI-Agenten integriert (2025: unter 5%).
+                            Wer jetzt trainiert, hat 12 Monate Vorsprung.
                         </p>
                         <p class="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[12px]">
-                            <a href="https://github.blog/news-insights/research/research-quantifying-github-copilots-impact-in-the-enterprise-with-accenture/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">GitHub / Microsoft Research</a>
-                            <a href="https://research.google/blog/accelerating-scientific-breakthroughs-with-an-ai-co-scientist/" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Google Research</a>
+                            <a href="https://www.bitkom.org/Presse/Presseinformation/Durchbruch-Kuenstliche-Intelligenz" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Bitkom 2025</a>
+                            <a href="https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026" target="_blank" rel="noopener" class="text-white/35 underline decoration-white/15 underline-offset-2 transition-colors hover:text-white/50">Gartner</a>
                         </p>
                     </div>
                 </div>
@@ -859,6 +860,30 @@ function checkout() {
                         </p>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- AI IDEA GENERATOR -->
+        <section
+            id="ideas"
+            data-animate
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            :class="isVisible('ideas') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+        >
+            <div class="mx-auto max-w-2xl">
+                <div class="mb-8 text-center">
+                    <p class="mb-3 text-[13px] font-medium tracking-[0.1em] text-[#007aff]/50 uppercase">
+                        Probier es aus
+                    </p>
+                    <h2 class="mb-4 text-[22px] leading-[1.3] font-bold tracking-[-0.3px] sm:text-[28px]">
+                        Was könnte KI für dein Unternehmen tun?
+                    </h2>
+                    <p class="mx-auto max-w-md text-[16px] leading-[1.6] text-white/50 sm:text-[17px]">
+                        Beschreib dein Unternehmen oder deine Herausforderung —
+                        unsere KI generiert konkrete Ideen, wie AI Agents dir helfen können.
+                    </p>
+                </div>
+                <IdeaGenerator />
             </div>
         </section>
 

@@ -18,7 +18,8 @@ class TranscriptionController extends Controller
             'audio' => ['required', 'file', 'max:10240'],
         ]);
 
-        $transcript = Transcription::fromUpload($request->file('audio'))->generate();
+        $transcript = Transcription::fromUpload($request->file('audio'))
+            ->generate(provider: Lab::ElevenLabs);
 
         return response()->json(['text' => (string) $transcript]);
     }
@@ -43,8 +44,8 @@ class TranscriptionController extends Controller
 
             Reagiere darauf:
             1. Bestätige kurz und sympathisch was er/sie gesagt hat
-            2. Erkläre in 1 Satz was technisch passiert ist (Audio → Whisper API → Text)
-            3. Nenne einen überraschenden Fakt: Ein Mensch tippt ~40 Wörter/Minute. Sprache: ~150 Wörter/Minute. KI-Transkription verarbeitet 1 Stunde Audio in unter 10 Sekunden.
+            2. Erkläre in 1 Satz was technisch passiert ist (Audio wurde an ElevenLabs gesendet und per KI transkribiert)
+            3. Nenne einen Fakt: Ein Mensch tippt ca. 40 Wörter pro Minute. Sprechend sind es ca. 150. KI-Transkription verarbeitet 1 Stunde Audio in unter 10 Sekunden.
             4. Schließe mit einem ermutigenden Satz
 
             Maximal 4 kurze Sätze. Kein Emoji. Deutsch.
