@@ -77,12 +77,24 @@ function submit() {
                         deinem Wunsch-Stil.
                     </p>
 
+                    <!-- Preset Pills -->
+                    <div class="mb-4 flex gap-2 overflow-x-auto pb-1">
+                        <button
+                            v-for="pill in ['Wie Yoda', 'Auf Englisch', 'Sportkommentator', 'Wie ein Pirat', 'Sehr sachlich', 'Gen Z Slang']"
+                            :key="pill"
+                            class="shrink-0 cursor-pointer rounded-full bg-purple-500/10 px-3.5 py-1.5 text-[13px] font-medium text-purple-400 transition-all hover:bg-purple-500/20 active:scale-[0.95]"
+                            @click="style = pill"
+                        >
+                            {{ pill }}
+                        </button>
+                    </div>
+
                     <!-- Input -->
                     <div class="mb-2">
                         <input
                             v-model="style"
                             type="text"
-                            placeholder="z.B. rede wie Yoda, auf Englisch, wie ein Sportkommentator..."
+                            placeholder="Oder eigenen Stil eingeben..."
                             maxlength="200"
                             class="w-full rounded-xl border border-black/[0.08] bg-[#f5f5f7] px-4 py-3.5 text-[16px] text-[#1d1d1f] placeholder-[#86868b]/60 transition-all outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 dark:border-white/[0.08] dark:bg-[#2c2c2e] dark:text-[#f5f5f7] dark:placeholder-[#98989d]/60"
                             @keydown.enter="submit"
