@@ -94,6 +94,10 @@ async function answer(saidReal: boolean) {
                 class="rounded-2xl bg-white shadow-sm ring-1 ring-black/[0.04] dark:bg-[#1c1c1e] dark:ring-white/[0.06]"
             >
                 <div class="p-5 sm:p-6">
+                    <p class="mb-4 text-[20px] font-bold tracking-[-0.3px] text-[#007aff]">
+                        Echt passiert oder erfunden?
+                    </p>
+
                     <div class="mb-4 flex items-center justify-between">
                         <span
                             class="inline-block rounded-lg bg-[#007aff]/10 px-2.5 py-1 text-[11px] font-bold tracking-wider text-[#007aff] uppercase"
@@ -113,13 +117,9 @@ async function answer(saidReal: boolean) {
                     </h2>
 
                     <p
-                        class="mb-5 text-[17px] leading-[1.65] text-[#4a4a4f] dark:text-[#b0b0b5]"
+                        class="text-[17px] leading-[1.65] text-[#4a4a4f] dark:text-[#b0b0b5]"
                     >
                         {{ card.story }}
-                    </p>
-
-                    <p v-if="!revealed" class="text-[14px] font-semibold tracking-[-0.1px] text-[#007aff]">
-                        Ist diese Story echt passiert — oder erfunden?
                     </p>
 
                     <!-- Reveal -->
