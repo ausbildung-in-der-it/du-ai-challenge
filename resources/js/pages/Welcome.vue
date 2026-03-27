@@ -54,7 +54,7 @@ const isGiveawayModalOpen = ref(false);
                                 :href="journeyShow('real-or-fake')"
                                 class="inline-flex items-center justify-center gap-2 rounded-full bg-[#007aff] px-7 py-3.5 text-[16px] font-semibold text-white shadow-lg shadow-[#007aff]/20 transition-all active:scale-[0.97]"
                             >
-                                Challenge starten
+                                Zur Challenge
                                 <ArrowRight class="h-4 w-4" />
                             </Link>
                             <button
