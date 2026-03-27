@@ -93,31 +93,34 @@ async function answer(saidReal: boolean) {
             <div
                 class="rounded-2xl bg-white shadow-sm ring-1 ring-black/[0.04] dark:bg-[#1c1c1e] dark:ring-white/[0.06]"
             >
-                <div class="p-6">
-                    <span
-                        class="mb-4 inline-block rounded-lg bg-[#007aff]/10 px-2.5 py-1 text-[11px] font-bold tracking-wider text-[#007aff] uppercase"
-                    >
-                        {{ card.category }}
-                    </span>
+                <div class="p-5 sm:p-6">
+                    <div class="mb-4 flex items-center justify-between">
+                        <span
+                            class="inline-block rounded-lg bg-[#007aff]/10 px-2.5 py-1 text-[11px] font-bold tracking-wider text-[#007aff] uppercase"
+                        >
+                            {{ card.category }}
+                        </span>
+                        <span class="flex items-center gap-1.5 text-[12px] text-[#86868b]/60 dark:text-[#98989d]/60">
+                            <Calendar class="h-3 w-3" />
+                            {{ card.date_label }}
+                        </span>
+                    </div>
 
                     <h2
-                        class="mb-4 text-[22px] leading-[1.25] font-bold tracking-[-0.4px] text-[#1d1d1f] dark:text-[#f5f5f7]"
+                        class="mb-4 text-[24px] leading-[1.2] font-bold tracking-[-0.5px] text-[#1d1d1f] dark:text-[#f5f5f7]"
                     >
                         {{ card.headline }}
                     </h2>
 
                     <p
-                        class="mb-5 text-[16px] leading-[1.6] text-[#86868b] dark:text-[#98989d]"
+                        class="mb-5 text-[17px] leading-[1.65] text-[#4a4a4f] dark:text-[#b0b0b5]"
                     >
                         {{ card.story }}
                     </p>
 
-                    <div
-                        class="flex items-center gap-1.5 text-[13px] text-[#86868b] dark:text-[#98989d]"
-                    >
-                        <Calendar class="h-3.5 w-3.5 opacity-50" />
-                        {{ card.date_label }}
-                    </div>
+                    <p v-if="!revealed" class="text-[14px] font-semibold tracking-[-0.1px] text-[#007aff]">
+                        Ist diese Story echt passiert — oder erfunden?
+                    </p>
 
                     <!-- Reveal -->
                     <Transition
@@ -150,7 +153,7 @@ async function answer(saidReal: boolean) {
                                     class="mt-0.5 h-4 w-4 shrink-0 text-[#007aff] opacity-60"
                                 />
                                 <p
-                                    class="text-[14px] leading-[1.5] text-[#86868b] italic dark:text-[#98989d]"
+                                    class="text-[15px] leading-[1.55] text-[#6e6e73] italic dark:text-[#a8a8ad]"
                                 >
                                     {{ commentary.text.value
                                     }}<span
@@ -164,7 +167,7 @@ async function answer(saidReal: boolean) {
                             </div>
 
                             <p
-                                class="mb-4 text-[15px] leading-[1.6] text-[#1d1d1f] dark:text-[#f5f5f7]"
+                                class="mb-4 text-[16px] leading-[1.6] text-[#1d1d1f] dark:text-[#e5e5ea]"
                             >
                                 {{ card.explanation }}
                             </p>
@@ -200,13 +203,13 @@ async function answer(saidReal: boolean) {
         <div class="shrink-0 px-5 pb-5">
             <div v-if="!revealed" class="flex gap-3">
                 <button
-                    class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#ff3b30]/10 px-4 py-4 text-[17px] font-semibold tracking-[-0.2px] text-[#ff3b30] transition-all active:scale-[0.97]"
+                    class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#ff3b30]/10 px-4 py-4.5 text-[18px] font-bold tracking-[-0.2px] text-[#ff3b30] transition-all active:scale-[0.97]"
                     @click="answer(false)"
                 >
                     <X class="h-5 w-5" /> Erfunden
                 </button>
                 <button
-                    class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#34c759]/10 px-4 py-4 text-[17px] font-semibold tracking-[-0.2px] text-[#34c759] transition-all active:scale-[0.97]"
+                    class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#34c759]/10 px-4 py-4.5 text-[18px] font-bold tracking-[-0.2px] text-[#34c759] transition-all active:scale-[0.97]"
                     @click="answer(true)"
                 >
                     <Check class="h-5 w-5" /> Echt passiert
