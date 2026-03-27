@@ -36,23 +36,20 @@ export function useCommentaryPoll() {
         isLoading.value = true;
 
         try {
-            const res = await fetch(
-                `/api/sessions/${sessionId}/commentaries`,
-                {
-                    method: 'POST',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                        'X-XSRF-TOKEN': getXsrfToken(),
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
-                    body: JSON.stringify({
-                        quiz_card_id: quizCardId,
-                        persona_style: personaStyle ?? undefined,
-                    }),
+            const res = await fetch(`/api/sessions/${sessionId}/commentaries`, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-XSRF-TOKEN': getXsrfToken(),
+                    'X-Requested-With': 'XMLHttpRequest',
                 },
-            );
+                body: JSON.stringify({
+                    quiz_card_id: quizCardId,
+                    persona_style: personaStyle ?? undefined,
+                }),
+            });
 
             if (!res.ok) throw new Error(`POST failed: ${res.status}`);
 

@@ -47,9 +47,16 @@ class JourneySessionController extends Controller
             'current_block' => ['sometimes', 'integer', 'min:0'],
             'current_item' => ['sometimes', 'integer', 'min:0'],
             'answers' => ['sometimes', 'array'],
+            'completed' => ['sometimes', 'boolean'],
         ]);
 
         Log::info('JourneySessionController@update', ['session_id' => $journeySession->nanoid, 'fields' => array_keys($validated)]);
+
+        if (($validated['completed'] ?? false) && $journeySession->completed_at === null) {
+            $validated['completed_at'] = now();
+        }
+
+        unset($validated['completed']);
 
         $journeySession->update($validated);
 

@@ -75,7 +75,7 @@ function checkout() {
                 <p
                     class="mb-5 text-[13px] font-medium tracking-[0.1em] text-white/25 uppercase sm:text-[15px]"
                 >
-                    AI Literacy &middot; AI Security &middot; EU AI Act
+                    AI Literacy · AI Security · EU AI Act
                 </p>
                 <h1
                     class="mb-5 text-[32px] leading-[1.1] font-bold tracking-[-1px] sm:text-[48px] lg:text-[60px]"
@@ -182,7 +182,7 @@ function checkout() {
                     <p
                         class="text-[13px] font-medium tracking-[0.1em] text-[#ff9f0a]/50 uppercase"
                     >
-                        EU AI Act &middot; Artikel 4
+                        EU AI Act · Artikel 4
                     </p>
                     <p
                         class="mt-4 text-[22px] leading-[1.35] font-bold tracking-[-0.3px] sm:text-[28px]"
@@ -373,7 +373,7 @@ function checkout() {
                             Track 1: AI Literacy
                         </h3>
                         <p class="text-[13px] text-white/30">
-                            4 Module &middot; KI verstehen und anwenden
+                            4 Module · KI verstehen und anwenden
                         </p>
                     </div>
                 </div>
@@ -550,7 +550,7 @@ function checkout() {
                             Track 2: AI Security
                         </h3>
                         <p class="text-[13px] text-white/30">
-                            3 Module &middot; KI-Risiken erkennen und abwehren
+                            3 Module · KI-Risiken erkennen und abwehren
                         </p>
                     </div>
                 </div>
@@ -1407,47 +1407,12 @@ function checkout() {
                             besser.
                         </p>
                         <p class="text-white/55">
-                            Deshalb der Preis: 1.990 &euro; statt dem, was wir
+                            Deshalb der Preis: 1.990 € statt dem, was wir
                             später verlangen werden. Ihr bekommt ein besseres
                             Produkt. Wir bekommen echtes Feedback. Fair deal.
                         </p>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- AI IDEA GENERATOR -->
-        <section
-            id="ideas"
-            data-animate
-            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
-            :class="
-                isVisible('ideas')
-                    ? 'translate-y-0 opacity-100'
-                    : 'translate-y-8 opacity-0'
-            "
-        >
-            <div class="mx-auto max-w-2xl">
-                <div class="mb-8 text-center">
-                    <p
-                        class="mb-3 text-[13px] font-medium tracking-[0.1em] text-[#007aff]/50 uppercase"
-                    >
-                        Probier es aus
-                    </p>
-                    <h2
-                        class="mb-4 text-[22px] leading-[1.3] font-bold tracking-[-0.3px] sm:text-[28px]"
-                    >
-                        Was könnte KI für dein Unternehmen tun?
-                    </h2>
-                    <p
-                        class="mx-auto max-w-md text-[16px] leading-[1.6] text-white/50 sm:text-[17px]"
-                    >
-                        Beschreib dein Unternehmen oder deine Herausforderung —
-                        unsere KI generiert konkrete Ideen, wie AI Agents dir
-                        helfen können.
-                    </p>
-                </div>
-                <IdeaGenerator />
             </div>
         </section>
 
@@ -1466,7 +1431,7 @@ function checkout() {
                 <p
                     class="mb-5 text-[13px] font-medium tracking-[0.1em] text-[#34c759]/50 uppercase"
                 >
-                    Mitwirkungsphase &middot; 10 Plätze &middot; Start
+                    Mitwirkungsphase · 10 Plätze · Start
                     01.06.2026
                 </p>
                 <div
@@ -1475,11 +1440,11 @@ function checkout() {
                     1.990
                     <span
                         class="text-[24px] font-semibold text-white/25 sm:text-[32px]"
-                        >&euro;</span
+                        >€</span
                     >
                 </div>
                 <p class="mb-8 text-[15px] text-white/30">
-                    zzgl. MwSt. &middot; Einmalzahlung &middot; keine laufenden
+                    zzgl. MwSt. · Einmalzahlung · keine laufenden
                     Kosten
                 </p>
 
@@ -1571,6 +1536,30 @@ function checkout() {
             </div>
         </section>
 
+        <!-- AI IDEA GENERATOR -->
+        <section
+            id="ideas"
+            data-animate
+            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            :class="isVisible('ideas') ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'"
+        >
+            <div class="mx-auto max-w-2xl">
+                <div class="mb-8 text-center">
+                    <p class="mb-3 text-[13px] font-medium tracking-[0.1em] text-[#007aff]/50 uppercase">
+                        Probier es aus
+                    </p>
+                    <h2 class="mb-4 text-[22px] leading-[1.3] font-bold tracking-[-0.3px] sm:text-[28px]">
+                        Was könnte KI für dein Unternehmen tun?
+                    </h2>
+                    <p class="mx-auto max-w-md text-[16px] leading-[1.6] text-white/50 sm:text-[17px]">
+                        Beschreib dein Unternehmen oder deine Herausforderung —
+                        unsere KI generiert konkrete Ideen, wie AI Agents dir helfen können.
+                    </p>
+                </div>
+                <IdeaGenerator />
+            </div>
+        </section>
+
         <!-- QUIZ AUSPROBIEREN -->
         <section
             id="try-quiz"
@@ -1628,7 +1617,7 @@ function checkout() {
                     @click="checkout"
                 >
                     <template v-if="!isCheckingOut">
-                        Jetzt sichern &middot; 1.990 &euro;
+                        Jetzt sichern · 1.990 €
                         <ArrowRight
                             class="h-5 w-5 transition-transform group-hover:translate-x-0.5"
                         />
@@ -1640,7 +1629,7 @@ function checkout() {
                     </template>
                 </button>
                 <p class="mt-4 text-[13px] text-white/15">
-                    10 Plätze &middot; zzgl. MwSt. &middot; Start 01.06.2026
+                    10 Plätze · zzgl. MwSt. · Start 01.06.2026
                 </p>
             </div>
         </section>

@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { ChevronRight, GitCommit, Clock, Sparkles, ArrowRight } from 'lucide-vue-next';
+import {
+    ChevronRight,
+    GitCommit,
+    Clock,
+    Sparkles,
+    ArrowRight,
+} from 'lucide-vue-next';
 
 interface CommitData {
     hash: string;
@@ -114,7 +120,9 @@ onMounted(async () => {
                         {{ config.title }}
                     </h2>
 
-                    <p class="mb-5 text-[15px] leading-[1.6] text-[#86868b] dark:text-[#98989d]">
+                    <p
+                        class="mb-5 text-[15px] leading-[1.6] text-[#86868b] dark:text-[#98989d]"
+                    >
                         {{ config.subtitle }}
                     </p>
 
@@ -123,17 +131,24 @@ onMounted(async () => {
                         <div
                             class="h-4 w-4 animate-spin rounded-full border-2 border-[#30d158] border-t-transparent"
                         />
-                        <span class="text-[13px] text-[#86868b] dark:text-[#98989d]">
+                        <span
+                            class="text-[13px] text-[#86868b] dark:text-[#98989d]"
+                        >
                             Lade Git-History…
                         </span>
                     </div>
 
                     <template v-else-if="displayedCommits.length > 0">
                         <!-- Date range -->
-                        <div v-if="firstCommitDate" class="mb-3 text-[12px] leading-[1.5] text-[#86868b] dark:text-[#98989d]">
+                        <div
+                            v-if="firstCommitDate"
+                            class="mb-3 text-[12px] leading-[1.5] text-[#86868b] dark:text-[#98989d]"
+                        >
                             <span>Erster Commit: {{ firstCommitDate }}</span>
                             <br v-if="lastCommitDate" />
-                            <span v-if="lastCommitDate">Letzter Commit: {{ lastCommitDate }}</span>
+                            <span v-if="lastCommitDate"
+                                >Letzter Commit: {{ lastCommitDate }}</span
+                            >
                         </div>
 
                         <!-- Duration badge -->
@@ -141,26 +156,33 @@ onMounted(async () => {
                             class="mb-5 inline-flex items-center gap-1.5 rounded-full bg-[#30d158]/10 px-3 py-1.5"
                         >
                             <Clock class="h-3.5 w-3.5 text-[#30d158]" />
-                            <span class="text-[13px] font-semibold text-[#30d158]">
+                            <span
+                                class="text-[13px] font-semibold text-[#30d158]"
+                            >
                                 {{ durationLabel }}
                             </span>
                         </div>
 
                         <!-- Git Timeline -->
-                        <div class="relative ml-3 border-l-2 border-[#30d158]/20 pl-5">
+                        <div
+                            class="relative ml-3 border-l-2 border-[#30d158]/20 pl-5"
+                        >
                             <TransitionGroup
                                 enter-active-class="transition-all duration-400 ease-out"
                                 enter-from-class="opacity-0 translate-x-3"
                                 enter-to-class="opacity-100 translate-x-0"
                             >
                                 <div
-                                    v-for="commit in displayedCommits.slice(0, visibleCount)"
+                                    v-for="commit in displayedCommits.slice(
+                                        0,
+                                        visibleCount,
+                                    )"
                                     :key="commit.hash"
                                     class="relative mb-4 last:mb-0"
                                 >
                                     <!-- Dot on timeline -->
                                     <div
-                                        class="absolute -left-[27px] top-[5px] h-3 w-3 rounded-full border-2 border-[#30d158] bg-white dark:bg-[#1c1c1e]"
+                                        class="absolute top-[5px] -left-[27px] h-3 w-3 rounded-full border-2 border-[#30d158] bg-white dark:bg-[#1c1c1e]"
                                     />
 
                                     <!-- Time label -->
@@ -168,7 +190,9 @@ onMounted(async () => {
                                         class="text-[11px] font-medium tracking-wide text-[#30d158] tabular-nums"
                                     >
                                         {{ commit.time }} Uhr
-                                        <span class="text-[#86868b]/50 dark:text-[#98989d]/50">
+                                        <span
+                                            class="text-[#86868b]/50 dark:text-[#98989d]/50"
+                                        >
                                             · +{{ commit.minutes_in }} min
                                         </span>
                                     </span>
@@ -196,11 +220,14 @@ onMounted(async () => {
                                 enter-to-class="opacity-100"
                             >
                                 <div
-                                    v-if="hiddenCount > 0 && visibleCount >= displayedCommits.length"
+                                    v-if="
+                                        hiddenCount > 0 &&
+                                        visibleCount >= displayedCommits.length
+                                    "
                                     class="relative mb-0 pt-1"
                                 >
                                     <div
-                                        class="absolute -left-[27px] top-[9px] h-3 w-3 rounded-full border-2 border-dashed border-[#86868b]/30 bg-white dark:bg-[#1c1c1e]"
+                                        class="absolute top-[9px] -left-[27px] h-3 w-3 rounded-full border-2 border-dashed border-[#86868b]/30 bg-white dark:bg-[#1c1c1e]"
                                     />
                                     <p
                                         class="text-[13px] text-[#86868b] italic dark:text-[#98989d]"

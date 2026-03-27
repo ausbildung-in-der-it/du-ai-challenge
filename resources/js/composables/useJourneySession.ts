@@ -1,5 +1,10 @@
 import { ref, computed } from 'vue';
-import type { LearningJourneyData } from '@/composables/types';
+import {
+    store as storeJourneySession,
+    show as showJourneySession,
+    update as updateJourneySession,
+    setPersona as setJourneyPersona,
+} from '@/actions/App/Http/Controllers/JourneySessionController';
 
 export type QuizAnswer = {
     user_said_real: boolean;
@@ -80,19 +85,29 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
 
     const totalQuizCards = computed(() =>
         journey.blocks.reduce(
-            (sum, b) =>
-                b.type === 'quiz' ? sum + b.quiz_cards.length : sum,
+            (sum, b) => (b.type === 'quiz' ? sum + b.quiz_cards.length : sum),
             0,
         ),
     );
+
+    const displayStepTotal = computed(() => totalQuizCards.value);
+
+    const displayStepCurrent = computed(() => {
+        let step = 0;
+        for (let i = 0; i < currentBlock.value; i++) {
+            const block = journey.blocks[i];
+            if (block.type === 'quiz') step += block.quiz_cards.length;
+        }
+        const block = journey.blocks[currentBlock.value];
+        if (block?.type === 'quiz') step += currentItem.value;
+        return step;
+    });
 
     const correctCount = computed(
         () => Object.values(answers.value).filter((a) => a.correct).length,
     );
 
-    const answeredQuizCount = computed(
-        () => Object.keys(answers.value).length,
-    );
+    const answeredQuizCount = computed(() => Object.keys(answers.value).length);
 
     // Persist session ID to localStorage
     function saveToStorage() {
@@ -109,8 +124,10 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
     }
 
     async function startSession(): Promise<string> {
-        const data = await api<{ session_id: string }>('/api/sessions', {
-            method: 'POST',
+        const route = storeJourneySession();
+
+        const data = await api<{ session_id: string }>(route.url, {
+            method: route.method.toUpperCase(),
             body: JSON.stringify({
                 learning_journey_id: journey.id,
             }),
@@ -130,6 +147,7 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
         if (!stored) return false;
 
         try {
+            const route = showJourneySession(stored);
             const data = await api<{
                 session_id: string;
                 current_block: number;
@@ -138,7 +156,9 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
                 persona_style: string | null;
                 persona_prompt_shown: boolean;
                 completed: boolean;
-            }>(`/api/sessions/${stored}`);
+            }>(route.url, {
+                method: route.method.toUpperCase(),
+            });
 
             if (data.completed) return false;
 
@@ -157,8 +177,10 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
 
     async function saveProgress() {
         if (!sessionId.value) return;
-        await api(`/api/sessions/${sessionId.value}`, {
-            method: 'PATCH',
+        const route = updateJourneySession(sessionId.value);
+
+        await api(route.url, {
+            method: route.method.toUpperCase(),
             body: JSON.stringify({
                 current_block: currentBlock.value,
                 current_item: currentItem.value,
@@ -167,7 +189,11 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
         });
     }
 
-    function recordAnswer(cardId: number, userSaidReal: boolean, isReal: boolean) {
+    function recordAnswer(
+        cardId: number,
+        userSaidReal: boolean,
+        isReal: boolean,
+    ) {
         answers.value[String(cardId)] = {
             user_said_real: userSaidReal,
             correct: userSaidReal === isReal,
@@ -193,7 +219,17 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
             currentBlock.value++;
             currentItem.value = 0;
         } else {
-            await saveProgress();
+            const route = updateJourneySession(sessionId.value!);
+            await api(route.url, {
+                method: route.method.toUpperCase(),
+                body: JSON.stringify({
+                    current_block: currentBlock.value,
+                    current_item: currentItem.value,
+                    answers: answers.value,
+                    completed: true,
+                }),
+            });
+
             return 'end';
         }
 
@@ -205,8 +241,10 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
         if (!sessionId.value) return;
         personaStyle.value = style;
         personaPromptShown.value = true;
-        await api(`/api/sessions/${sessionId.value}/persona`, {
-            method: 'POST',
+        const route = setJourneyPersona(sessionId.value);
+
+        await api(route.url, {
+            method: route.method.toUpperCase(),
             body: JSON.stringify({ persona_style: style }),
         });
     }
@@ -223,6 +261,8 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
         currentStep,
         progress,
         totalQuizCards,
+        displayStepTotal,
+        displayStepCurrent,
         correctCount,
         answeredQuizCount,
         startSession,

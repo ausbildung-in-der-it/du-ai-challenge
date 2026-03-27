@@ -7,13 +7,16 @@ use App\Http\Controllers\GitCommitController;
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\JourneyController;
 use App\Http\Controllers\JourneySessionController;
+use App\Http\Controllers\NewsletterLeadController;
+use App\Http\Controllers\TeilnahmebedingungenController;
 use App\Http\Controllers\TranscriptionController;
 use App\Models\JourneySession;
 use App\Models\LearningJourney;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Welcome')->name('home');
-Route::redirect('/challenge', '/journey/real-or-fake');
+Route::redirect('/challenge', '/');
+Route::get('/teilnahmebedingungen', TeilnahmebedingungenController::class)->name('teilnahmebedingungen');
 
 // AI Ready Funnel
 Route::get('/ai-ready', [AiReadyController::class, 'index'])->name('ai-ready');
@@ -27,6 +30,7 @@ Route::post('/api/sessions', [JourneySessionController::class, 'store'])->name('
 Route::get('/api/sessions/{journeySession}', [JourneySessionController::class, 'show'])->name('sessions.show');
 Route::patch('/api/sessions/{journeySession}', [JourneySessionController::class, 'update'])->name('sessions.update');
 Route::post('/api/sessions/{journeySession}/persona', [JourneySessionController::class, 'setPersona'])->name('sessions.persona');
+Route::post('/api/newsletter-leads', [NewsletterLeadController::class, 'store'])->name('newsletter-leads.store');
 
 // Commentary API (SSE stream + DB persistence)
 Route::post('/api/sessions/{journeySession}/commentaries', [CommentaryController::class, 'store'])->name('commentaries.store');

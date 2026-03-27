@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue';
-import { Mic, Square, ChevronRight, Sparkles, AudioLines } from 'lucide-vue-next';
+import {
+    Mic,
+    Square,
+    ChevronRight,
+    Sparkles,
+    AudioLines,
+} from 'lucide-vue-next';
 import { useStreamText } from '@/composables/useStreamText';
 
 defineEmits<{ next: [] }>();
@@ -21,16 +27,20 @@ let animFrame: number | null = null;
 let timerInterval: ReturnType<typeof setInterval> | null = null;
 
 function getXsrfToken(): string {
-    return document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1]
-        ?.replace(/%3D/g, '=') ?? '';
+    return (
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1]
+            ?.replace(/%3D/g, '=') ?? ''
+    );
 }
 
 async function startRecording() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+        });
         phase.value = 'recording';
         audioChunks = [];
         recordingTime.value = 0;
@@ -51,8 +61,8 @@ async function startRecording() {
         const mimeType = MediaRecorder.isTypeSupported('audio/mp4')
             ? 'audio/mp4'
             : MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-                ? 'audio/webm;codecs=opus'
-                : 'audio/webm';
+              ? 'audio/webm;codecs=opus'
+              : 'audio/webm';
 
         mediaRecorder = new MediaRecorder(stream, { mimeType });
         mediaRecorder.ondataavailable = (e) => {
@@ -68,7 +78,8 @@ async function startRecording() {
         mediaRecorder.start(250); // collect chunks every 250ms
     } catch {
         phase.value = 'done';
-        transcript.value = '(Mikrofon nicht verfügbar — bitte Berechtigung erteilen)';
+        transcript.value =
+            '(Mikrofon nicht verfügbar — bitte Berechtigung erteilen)';
     }
 }
 
@@ -135,12 +146,15 @@ async function transcribeAudio(mimeType: string) {
         const data = await res.json();
         transcript.value = data.text || '(Kein Text erkannt)';
     } catch (e) {
-        transcript.value = '(Transkription fehlgeschlagen — bitte erneut versuchen)';
+        transcript.value =
+            '(Transkription fehlgeschlagen — bitte erneut versuchen)';
     }
 
     // Stream AI reaction
     phase.value = 'reacting';
-    await aiReaction.stream('/api/transcribe/react', { text: transcript.value });
+    await aiReaction.stream('/api/transcribe/react', {
+        text: transcript.value,
+    });
     phase.value = 'done';
 }
 
@@ -153,35 +167,53 @@ onUnmounted(() => {
 <template>
     <div class="flex min-h-0 flex-1 flex-col">
         <div class="flex-1 overflow-y-auto px-5 pb-4">
-            <div class="rounded-2xl bg-white shadow-sm ring-1 ring-black/[0.04] dark:bg-[#1c1c1e] dark:ring-white/[0.06]">
+            <div
+                class="rounded-2xl bg-white shadow-sm ring-1 ring-black/[0.04] dark:bg-[#1c1c1e] dark:ring-white/[0.06]"
+            >
                 <div class="p-6">
-                    <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff9f0a]/10">
+                    <div
+                        class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff9f0a]/10"
+                    >
                         <AudioLines class="h-6 w-6 text-[#ff9f0a]" />
                     </div>
 
-                    <h2 class="mb-2 text-[22px] leading-[1.25] font-bold tracking-[-0.4px] text-[#1d1d1f] dark:text-[#f5f5f7]">
+                    <h2
+                        class="mb-2 text-[22px] leading-[1.25] font-bold tracking-[-0.4px] text-[#1d1d1f] dark:text-[#f5f5f7]"
+                    >
                         Sprich mal rein.
                     </h2>
 
-                    <p class="mb-5 text-[15px] leading-[1.6] text-[#86868b] dark:text-[#98989d]">
-                        Ein Mensch tippt ~40 Wörter pro Minute. Sprechend: ~150. KI transkribiert 1 Stunde Audio in unter 10 Sekunden. Probier's aus.
+                    <p
+                        class="mb-5 text-[15px] leading-[1.6] text-[#86868b] dark:text-[#98989d]"
+                    >
+                        Ein Mensch tippt ~40 Wörter pro Minute. Sprechend: ~150.
+                        KI transkribiert 1 Stunde Audio in unter 10 Sekunden.
+                        Probier's aus.
                     </p>
 
                     <!-- Intro: Mic button -->
-                    <div v-if="phase === 'intro'" class="flex flex-col items-center gap-3 py-6">
+                    <div
+                        v-if="phase === 'intro'"
+                        class="flex flex-col items-center gap-3 py-6"
+                    >
                         <button
                             class="flex h-20 w-20 cursor-pointer items-center justify-center rounded-full bg-[#007aff] shadow-lg shadow-[#007aff]/25 transition-all active:scale-[0.93]"
                             @click="startRecording"
                         >
                             <Mic class="h-8 w-8 text-white" />
                         </button>
-                        <span class="text-[13px] text-[#86868b] dark:text-[#98989d]">Tippen zum Aufnehmen</span>
+                        <span
+                            class="text-[13px] text-[#86868b] dark:text-[#98989d]"
+                            >Tippen zum Aufnehmen</span
+                        >
                     </div>
 
                     <!-- Recording: Audio bars + Stop -->
                     <div v-else-if="phase === 'recording'" class="py-4">
                         <!-- Audio level bars -->
-                        <div class="mb-4 flex h-12 items-center justify-center gap-[3px]">
+                        <div
+                            class="mb-4 flex h-12 items-center justify-center gap-[3px]"
+                        >
                             <div
                                 v-for="(h, i) in bars"
                                 :key="i"
@@ -191,7 +223,9 @@ onUnmounted(() => {
                         </div>
 
                         <!-- Timer -->
-                        <p class="mb-4 text-center text-[28px] font-light tracking-wider text-[#1d1d1f] tabular-nums dark:text-[#f5f5f7]">
+                        <p
+                            class="mb-4 text-center text-[28px] font-light tracking-wider text-[#1d1d1f] tabular-nums dark:text-[#f5f5f7]"
+                        >
                             {{ formatTime(recordingTime) }}
                         </p>
 
@@ -202,31 +236,59 @@ onUnmounted(() => {
                             >
                                 <Square class="h-5 w-5 fill-white text-white" />
                             </button>
-                            <span class="text-[13px] text-[#86868b] dark:text-[#98989d]">Tippen zum Stoppen</span>
+                            <span
+                                class="text-[13px] text-[#86868b] dark:text-[#98989d]"
+                                >Tippen zum Stoppen</span
+                            >
                         </div>
                     </div>
 
                     <!-- Transcribing spinner -->
-                    <div v-else-if="phase === 'transcribing'" class="flex flex-col items-center gap-3 py-8">
-                        <div class="h-6 w-6 animate-spin rounded-full border-2 border-[#ff9f0a] border-t-transparent" />
-                        <span class="text-[15px] text-[#86868b] dark:text-[#98989d]">Transkribiere via ElevenLabs...</span>
+                    <div
+                        v-else-if="phase === 'transcribing'"
+                        class="flex flex-col items-center gap-3 py-8"
+                    >
+                        <div
+                            class="h-6 w-6 animate-spin rounded-full border-2 border-[#ff9f0a] border-t-transparent"
+                        />
+                        <span
+                            class="text-[15px] text-[#86868b] dark:text-[#98989d]"
+                            >Transkribiere via ElevenLabs...</span
+                        >
                     </div>
 
                     <!-- Result: Transcript + AI Reaction -->
                     <div v-else class="space-y-4">
-                        <div class="rounded-xl bg-[#f5f5f7] p-4 dark:bg-[#2c2c2e]">
-                            <p class="mb-1 text-[11px] font-bold tracking-wider text-[#86868b] uppercase dark:text-[#98989d]">
+                        <div
+                            class="rounded-xl bg-[#f5f5f7] p-4 dark:bg-[#2c2c2e]"
+                        >
+                            <p
+                                class="mb-1 text-[11px] font-bold tracking-wider text-[#86868b] uppercase dark:text-[#98989d]"
+                            >
                                 Dein Text (Speech-to-Text)
                             </p>
-                            <p class="text-[15px] leading-[1.6] text-[#1d1d1f] dark:text-[#f5f5f7]">
+                            <p
+                                class="text-[15px] leading-[1.6] text-[#1d1d1f] dark:text-[#f5f5f7]"
+                            >
                                 {{ transcript }}
                             </p>
                         </div>
 
-                        <div v-if="aiReaction.text.value || aiReaction.isLoading.value" class="flex items-start gap-2">
-                            <Sparkles class="mt-0.5 h-4 w-4 shrink-0 text-[#ff9f0a] opacity-60" />
-                            <p class="text-[14px] leading-[1.5] text-[#86868b] italic dark:text-[#98989d]">
-                                {{ aiReaction.text.value }}<span
+                        <div
+                            v-if="
+                                aiReaction.text.value ||
+                                aiReaction.isLoading.value
+                            "
+                            class="flex items-start gap-2"
+                        >
+                            <Sparkles
+                                class="mt-0.5 h-4 w-4 shrink-0 text-[#ff9f0a] opacity-60"
+                            />
+                            <p
+                                class="text-[14px] leading-[1.5] text-[#86868b] italic dark:text-[#98989d]"
+                            >
+                                {{ aiReaction.text.value
+                                }}<span
                                     v-if="aiReaction.isLoading.value"
                                     class="ml-0.5 inline-block h-[14px] w-[2px] animate-pulse bg-[#ff9f0a]"
                                 />

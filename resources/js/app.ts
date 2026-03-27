@@ -22,6 +22,6 @@ createInertiaApp({
             posthog.captureException(err);
         };
 
-        app.mount(el);
+        app.mount(el!);
     },
 });
