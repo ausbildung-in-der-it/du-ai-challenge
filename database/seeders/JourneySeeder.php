@@ -276,7 +276,20 @@ class JourneySeeder extends Seeder
             'position' => 1,
         ]);
 
-        // ── Block 10: Learn — Abschluss ───────────────────
+        // ── Block: Timeline — Wie dieses Projekt entstand ──
+        JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'timeline',
+            'position' => $pos++,
+            'config' => [
+                'title' => 'Dieses Quiz? Gebaut in unter 2 Stunden.',
+                'subtitle' => 'Ein KI-Agent (Claude Code) hat diese gesamte Lernreise entwickelt — Backend, Frontend, KI-Integration, Content. Hier ist die echte Git-History:',
+                'teaser_headline' => 'Dein Team soll das auch können?',
+                'teaser_text' => 'In unserem AI Ready Training lernt dein Team, KI-Agenten wie diesen zu bauen — hands-on, mit echten Tools, in echten Projekten. Von Prompt Engineering bis Produktions-Deployment.',
+            ],
+        ]);
+
+        // ── Block: Learn — Abschluss ───────────────────
         $this->learn($journey, $pos++, 'Erst formen wir unsere Werkzeuge — dann formen sie uns', "John M. Culkin, 1967. Jeder Werkzeugsprung hat nicht das Tempo verändert, sondern die Ebene.\n\nMit KI-Agenten formulieren wir Ziele — die Maschine findet den Weg. Das Training von GPT-5 kostet 500 Millionen Dollar. Eine einzige KI-Anfrage verbraucht so viel Wasser wie eine Flasche. Irland nutzt 32 Prozent seiner Elektrizität für Rechenzentren.\n\nKI-Kompetenz ist seit Februar 2025 durch den EU AI Act gesetzliche Pflicht. Ab August 2026 wird durchgesetzt.\n\nDie Frage ist nicht ob KI deine Arbeit verändert. Sondern ob du die Veränderung gestaltest.", 'sparkles');
     }
 

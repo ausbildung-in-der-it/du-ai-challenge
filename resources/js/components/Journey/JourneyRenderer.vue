@@ -6,6 +6,7 @@ import LearnCard from './LearnCard.vue';
 import AiCompareBlock from './AiCompareBlock.vue';
 import ChoiceCard from './ChoiceCard.vue';
 import SpeechBlock from './SpeechBlock.vue';
+import TimelineCard from './TimelineCard.vue';
 import PersonaInterstitial from './PersonaInterstitial.vue';
 import PromptReveal from './PromptReveal.vue';
 import { useJourneySession } from '@/composables/useJourneySession';
@@ -237,6 +238,12 @@ const endMessage = computed(() => {
                 <SpeechBlock
                     v-else-if="currentBlock.type === 'speech'"
                     :key="`speech-${session.currentBlock.value}`"
+                    @next="advanceToNext"
+                />
+                <TimelineCard
+                    v-else-if="currentBlock.type === 'timeline'"
+                    :key="`timeline-${session.currentBlock.value}`"
+                    :config="currentBlock.config"
                     @next="advanceToNext"
                 />
             </Transition>

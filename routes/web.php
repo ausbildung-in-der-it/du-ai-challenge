@@ -3,6 +3,7 @@
 use App\Http\Controllers\AiCompareController;
 use App\Http\Controllers\AiReadyController;
 use App\Http\Controllers\CommentaryController;
+use App\Http\Controllers\GitCommitController;
 use App\Http\Controllers\IdeaController;
 use App\Http\Controllers\JourneyController;
 use App\Http\Controllers\JourneySessionController;
@@ -41,6 +42,9 @@ Route::post('/api/ai-compare/stream', [AiCompareController::class, 'stream'])->n
 
 // AI Idea Generator
 Route::post('/api/ai-ready/generate', [IdeaController::class, 'generate'])->name('ai-ready.generate');
+
+// Git Commits API
+Route::get('/api/git-commits', [GitCommitController::class, 'index'])->name('git-commits.index');
 
 // Dev: reset all sessions for a journey
 Route::get('/journey/{journey:slug}/reset', function (LearningJourney $journey) {
