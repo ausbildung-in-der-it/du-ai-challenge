@@ -191,13 +191,6 @@ class AiCompareController extends Controller
                 'label' => 'Google',
                 'tier' => 'fast',
             ];
-            $providers[] = [
-                'provider' => Lab::Gemini,
-                'model' => 'gemini-2.5-pro',
-                'model_label' => 'Pro 2.5',
-                'label' => 'Google',
-                'tier' => 'smart',
-            ];
         }
 
         return $providers;
