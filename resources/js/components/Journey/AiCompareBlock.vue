@@ -47,7 +47,7 @@ onMounted(async () => {
     // Failsafe: allow skip after 15 seconds regardless
     const skipTimer = setTimeout(() => {
         canSkip.value = true;
-    }, 15000);
+    }, 5000);
 
     try {
         const res = await fetch('/api/ai-compare/stream', {
