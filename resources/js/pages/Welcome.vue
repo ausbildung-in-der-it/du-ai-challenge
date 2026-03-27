@@ -67,11 +67,11 @@ import { Zap, ArrowRight, Sparkles, Presentation, Clock, MapPin } from 'lucide-v
                     </div>
                     <div class="min-w-0 flex-1">
                         <div class="mb-1 flex items-center justify-between">
-                            <h2 class="text-[17px] font-semibold tracking-[-0.2px]">AI Ready</h2>
+                            <h2 class="text-[17px] font-semibold tracking-[-0.2px]">AI Ready Training</h2>
                             <ArrowRight class="h-4 w-4 text-white/25 transition-transform group-hover:translate-x-0.5 group-hover:text-white/50" />
                         </div>
                         <p class="text-[14px] leading-[1.5] text-white/45">
-                            Hands-on AI-Training für dein Team. 7 Module, Simulationen, EU AI Act Compliance.
+                            Dein Team soll eigene KI-Agenten bauen? Hands-on lernen, Chancen und Grenzen einschätzen, KI strategisch einsetzen.
                         </p>
                     </div>
                 </a>
