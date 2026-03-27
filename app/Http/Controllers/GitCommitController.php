@@ -26,7 +26,9 @@ class GitCommitController extends Controller
                 'minutes_in' => $c->minutes_in,
             ]),
             'total' => $commits->count(),
-            'duration_minutes' => $durationMinutes,
+            'duration_minutes' => (int) round($durationMinutes),
+            'first_commit' => $first?->committed_at->translatedFormat('l, j. F Y, H:i').' Uhr',
+            'last_commit' => $last?->committed_at->translatedFormat('l, j. F Y, H:i').' Uhr',
         ]);
     }
 }

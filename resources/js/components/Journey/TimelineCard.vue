@@ -15,6 +15,7 @@ const props = defineProps<{
         subtitle: string;
         teaser_headline: string;
         teaser_text: string;
+        teaser_cta?: boolean;
     };
 }>();
 
@@ -23,6 +24,8 @@ defineEmits<{ next: [] }>();
 const allCommits = ref<CommitData[]>([]);
 const totalCommits = ref(0);
 const durationMinutes = ref(0);
+const firstCommitDate = ref('');
+const lastCommitDate = ref('');
 const loading = ref(true);
 const visibleCount = ref(0);
 const showTeaser = ref(false);
@@ -33,7 +36,7 @@ const hiddenCount = computed(() => Math.max(0, totalCommits.value - maxShown));
 
 const durationLabel = computed(() => {
     const h = Math.floor(durationMinutes.value / 60);
-    const m = durationMinutes.value % 60;
+    const m = Math.round(durationMinutes.value % 60);
     const parts: string[] = [];
     if (h > 0) parts.push(`${h} Stunde${h > 1 ? 'n' : ''}`);
     if (m > 0) parts.push(`${m} Minuten`);
@@ -65,6 +68,8 @@ onMounted(async () => {
             allCommits.value = data.commits;
             totalCommits.value = data.total;
             durationMinutes.value = data.duration_minutes;
+            firstCommitDate.value = data.first_commit ?? '';
+            lastCommitDate.value = data.last_commit ?? '';
         }
     } catch {
         // Silently fail — card still shows title/teaser
@@ -124,6 +129,13 @@ onMounted(async () => {
                     </div>
 
                     <template v-else-if="displayedCommits.length > 0">
+                        <!-- Date range -->
+                        <div v-if="firstCommitDate" class="mb-3 text-[12px] leading-[1.5] text-[#86868b] dark:text-[#98989d]">
+                            <span>Erster Commit: {{ firstCommitDate }}</span>
+                            <br v-if="lastCommitDate" />
+                            <span v-if="lastCommitDate">Letzter Commit: {{ lastCommitDate }}</span>
+                        </div>
+
                         <!-- Duration badge -->
                         <div
                             class="mb-5 inline-flex items-center gap-1.5 rounded-full bg-[#30d158]/10 px-3 py-1.5"
@@ -230,6 +242,7 @@ onMounted(async () => {
                             {{ config.teaser_text }}
                         </p>
                         <a
+                            v-if="config.teaser_cta !== false"
                             href="/ai-ready"
                             class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#ff9f0a] transition-opacity hover:opacity-80"
                         >

@@ -2,6 +2,7 @@
 import { ref, computed, nextTick } from 'vue';
 import { X, Check, ExternalLink, ChevronRight, Calendar, Sparkles } from 'lucide-vue-next';
 import { useStreamText } from '@/composables/useStreamText';
+import posthog from 'posthog-js';
 
 const props = defineProps<{
     card: App.Data.QuizCardData;
@@ -52,6 +53,13 @@ async function answer(saidReal: boolean) {
     revealHeadline.value = phrases[Math.floor(Math.random() * phrases.length)];
 
     emit('answered', saidReal);
+    posthog.capture('quiz_card_answered', {
+        card_id: props.card.id,
+        category: props.card.category,
+        is_real: props.card.is_real,
+        user_said_real: saidReal,
+        is_correct: saidReal === props.card.is_real,
+    });
 
     nextTick(() => {
         revealEl.value?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

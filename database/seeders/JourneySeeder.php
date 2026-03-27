@@ -8,11 +8,21 @@ use App\Models\LearnCard;
 use App\Models\LearningJourney;
 use App\Models\QuizCard;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class JourneySeeder extends Seeder
 {
     public function run(): void
     {
+        DB::transaction(function () {
+            $this->seed();
+        });
+    }
+
+    private function seed(): void
+    {
+        LearningJourney::where('slug', 'real-or-fake')->delete();
+
         $journey = LearningJourney::create([
             'title' => 'Real or Fake?',
             'slug' => 'real-or-fake',
@@ -68,7 +78,21 @@ class JourneySeeder extends Seeder
             ],
         ]);
 
-        // ── Block 3: Quiz (2) — Absurd aber real + Fake ───
+        // ── Block 3: Timeline — Wie dieses Quiz gebaut wurde ─
+        JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'timeline',
+            'position' => $pos++,
+            'config' => [
+                'title' => 'Übrigens: Dieses Quiz? Gebaut mit einem KI-Agenten.',
+                'subtitle' => 'Ich (Noel) habe keinen Texteditor angefasst. Kein einziges Mal. Ich habe delegiert — übers Handy, im Zug, zwischendurch beim Einkaufen. Mein Fachwissen, mein Geschmack, meine Steuerung. Der Agent hat den Code geschrieben. Hier ist die echte Git-History:',
+                'teaser_headline' => 'Willst du das live sehen?',
+                'teaser_text' => 'Heute um 16:00 Uhr auf der Tomorrow Stage zeige ich live, wie ich mit KI-Agenten entwickle. Vom Prompt zum fertigen Feature.',
+                'teaser_cta' => false,
+            ],
+        ]);
+
+        // ── Block 4: Quiz (2) — Absurd aber real + Fake ───
         $block = $this->quizBlock($journey, $pos++);
 
         QuizCard::create([
@@ -274,19 +298,6 @@ class JourneySeeder extends Seeder
             'explanation' => 'Fast richtig — aber nicht ganz. Die \$2B Seed gab es wirklich: Thinking Machines Lab, gegründet von Mira Murati (ex-OpenAI CTO), Sitz New York. Und ja: Albanien hat tatsächlich seinen Haushalt dafür angepasst.',
             'sources' => [],
             'position' => 1,
-        ]);
-
-        // ── Block: Timeline — Wie dieses Projekt entstand ──
-        JourneyBlock::create([
-            'learning_journey_id' => $journey->id,
-            'type' => 'timeline',
-            'position' => $pos++,
-            'config' => [
-                'title' => 'Dieses Quiz? Gebaut in unter 2 Stunden.',
-                'subtitle' => 'Ein KI-Agent (Claude Code) hat diese gesamte Lernreise entwickelt — Backend, Frontend, KI-Integration, Content. Hier ist die echte Git-History:',
-                'teaser_headline' => 'Dein Team soll das auch können?',
-                'teaser_text' => 'In unserem AI Ready Training lernt dein Team, KI-Agenten wie diesen zu bauen — hands-on, mit echten Tools, in echten Projekten. Von Prompt Engineering bis Produktions-Deployment.',
-            ],
         ]);
 
         // ── Block: Learn — Abschluss ───────────────────
