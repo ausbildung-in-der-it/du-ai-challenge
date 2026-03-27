@@ -98,15 +98,11 @@ async function answer(saidReal: boolean) {
                         Echt passiert oder erfunden?
                     </p>
 
-                    <div class="mb-4 flex items-center justify-between">
+                    <div class="mb-4">
                         <span
                             class="inline-block rounded-lg bg-[#007aff]/10 px-2.5 py-1 text-[11px] font-bold tracking-wider text-[#007aff] uppercase"
                         >
                             {{ card.category }}
-                        </span>
-                        <span class="flex items-center gap-1.5 text-[12px] text-[#86868b]/60 dark:text-[#98989d]/60">
-                            <Calendar class="h-3 w-3" />
-                            {{ card.date_label }}
                         </span>
                     </div>
 
