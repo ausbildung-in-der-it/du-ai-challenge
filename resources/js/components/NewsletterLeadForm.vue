@@ -2,7 +2,6 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { CheckCircle2, LoaderCircle } from 'lucide-vue-next';
 import { store as storeNewsletterLead } from '@/actions/App/Http/Controllers/NewsletterLeadController';
-import { Checkbox } from '@/components/ui/checkbox';
 
 type LeadSource = 'homepage' | 'challenge_complete';
 
@@ -198,9 +197,10 @@ async function submit() {
                 <label
                     class="flex items-start gap-3 rounded-2xl bg-black/[0.03] p-4 dark:bg-white/[0.04]"
                 >
-                    <Checkbox
-                        v-model:checked="form.privacy_accepted"
-                        class="mt-0.5 border-[#007aff]/35 data-[state=checked]:border-[#007aff] data-[state=checked]:bg-[#007aff] data-[state=checked]:text-white"
+                    <input
+                        v-model="form.privacy_accepted"
+                        type="checkbox"
+                        class="mt-1 h-4 w-4 shrink-0 cursor-pointer rounded accent-[#007aff]"
                     />
                     <span
                         class="text-[14px] leading-[1.6] text-[#4b4b52] dark:text-white/60"
