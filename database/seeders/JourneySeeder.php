@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ChoiceCard;
 use App\Models\JourneyBlock;
 use App\Models\LearnCard;
 use App\Models\LearningJourney;
@@ -98,7 +99,42 @@ class JourneySeeder extends Seeder
         // ── Block 4: Learn — KI halluziniert ──────────────
         $this->learn($journey, $pos++, 'Wenn KI halluziniert', "Das \"Existenz-Syndrom\" war erfunden — aber KI-Halluzinationen sind ein echtes Problem.\n\n700+ Gerichtsverfahren weltweit enthalten KI-halluzinierte Rechtsverweise. Ein Anwalt wurde zu \$10.000 Strafe verurteilt, weil 21 von 23 Zitaten in seiner Klageschrift von ChatGPT erfunden waren.\n\n57% aller Online-Texte sind mittlerweile KI-generiert. Die Frage ist nicht mehr ob du KI-Inhalte konsumierst — sondern ob du es merkst.", 'alert-triangle');
 
-        // ── Block 5: Quiz (2) — Coverup + Fake ───────────
+        // ── Block 5: Choice — KI-Wissen testen ─────────────
+        $block = JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'choice',
+            'position' => $pos++,
+        ]);
+
+        ChoiceCard::create([
+            'journey_block_id' => $block->id,
+            'question' => 'Was bedeutet "Halluzination" im KI-Kontext?',
+            'options' => [
+                'Die KI hat einen technischen Fehler und stürzt ab',
+                'Die KI generiert überzeugend klingende, aber falsche Informationen',
+                'Die KI verweigert eine Antwort aus Sicherheitsgründen',
+                'Die KI gibt absichtlich falsche Antworten',
+            ],
+            'correct_index' => 1,
+            'explanation' => 'KI-Modelle berechnen die wahrscheinlichste Wortfolge — sie "wissen" nichts. Wenn Trainingsdaten fehlen, füllt das Modell die Lücke mit plausibel klingendem, aber erfundenem Text. Daher der Begriff "Halluzination".',
+            'position' => 0,
+        ]);
+
+        ChoiceCard::create([
+            'journey_block_id' => $block->id,
+            'question' => 'Wie viel Prozent aller Online-Texte sind mittlerweile KI-generiert?',
+            'options' => [
+                'Etwa 12%',
+                'Etwa 28%',
+                'Etwa 57%',
+                'Etwa 83%',
+            ],
+            'correct_index' => 2,
+            'explanation' => 'Laut aktuellen Studien sind bereits 57% aller Online-Texte KI-generiert. 3 von 4 neuen Webseiten enthalten KI-Inhalte. Allerdings sind 86% der Top-Google-Ergebnisse noch menschengeschrieben — KI dominiert in der Masse, nicht in der Qualität.',
+            'position' => 1,
+        ]);
+
+        // ── Block 6: Quiz (2) — Coverup + Fake ───────────
         $block = $this->quizBlock($journey, $pos++);
 
         QuizCard::create([
@@ -164,7 +200,42 @@ class JourneySeeder extends Seeder
         // ── Block 8: Learn — Licht & Schatten ─────────────
         $this->learn($journey, $pos++, 'Licht und Schatten', "Die letzten beiden Karten zeigen das Spektrum: Krebs 10 Jahre früher erkennen — oder 3 Millionen Deepfakes in 11 Tagen generieren.\n\nKI hat keinen moralischen Kompass. Sie verstärkt, was wir ihr geben.\n\nDie Frage ist nicht ob KI mächtig ist — sondern wer die Leitplanken setzt.", 'scale');
 
-        // ── Block 9: Speech — Transcription ausprobieren ──
+        // ── Block 10: Choice — KI-Kompetenz ────────────────
+        $block = JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'choice',
+            'position' => $pos++,
+        ]);
+
+        ChoiceCard::create([
+            'journey_block_id' => $block->id,
+            'question' => 'Was ist ein "KI-Agent"?',
+            'options' => [
+                'Ein Roboter mit menschlichem Aussehen',
+                'Ein KI-System das eigenständig Ziele verfolgt, Werkzeuge nutzt und Entscheidungen trifft',
+                'Ein Chatbot der nur auf Fragen antwortet',
+                'Eine Person die KI-Systeme bedient',
+            ],
+            'correct_index' => 1,
+            'explanation' => 'Ein KI-Agent geht über einfache Chatbots hinaus: Er arbeitet in einem Loop (Denken, Handeln, Beobachten), nutzt Werkzeuge (Dateien, APIs, Code), und trifft eigenständig Entscheidungen. Genau das macht sie so mächtig — und riskant.',
+            'position' => 0,
+        ]);
+
+        ChoiceCard::create([
+            'journey_block_id' => $block->id,
+            'question' => 'Seit wann ist KI-Kompetenz in der EU gesetzlich vorgeschrieben?',
+            'options' => [
+                'Noch gar nicht — erst ab 2027',
+                'Seit August 2024',
+                'Seit Februar 2025 (EU AI Act, Artikel 4)',
+                'Es gibt keine gesetzliche Pflicht',
+            ],
+            'correct_index' => 2,
+            'explanation' => 'Der EU AI Act Artikel 4 gilt seit Februar 2025: Unternehmen müssen sicherstellen, dass Personal mit KI-Kompetenz ausgestattet ist. Die nationale Durchsetzung beginnt ab August 2026 — das heißt, die Uhr tickt bereits.',
+            'position' => 1,
+        ]);
+
+        // ── Block 11: Speech — Transcription ausprobieren ─
         JourneyBlock::create([
             'learning_journey_id' => $journey->id,
             'type' => 'speech',

@@ -1,5 +1,13 @@
 declare namespace App {
     namespace Data {
+        export type ChoiceCardData = {
+            id: number;
+            question: string;
+            options: string[];
+            correct_index: number;
+            explanation: string;
+            position: number;
+        };
         export type JourneyBlockData = {
             id: number;
             type: string;
@@ -7,6 +15,7 @@ declare namespace App {
             config: Record<string, any> | null;
             quiz_cards: App.Data.QuizCardData[];
             learn_cards: App.Data.LearnCardData[];
+            choice_cards: App.Data.ChoiceCardData[];
         };
         export type LearnCardData = {
             id: number;

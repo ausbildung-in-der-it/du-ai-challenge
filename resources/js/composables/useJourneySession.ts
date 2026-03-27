@@ -56,7 +56,8 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
     function blockItemCount(block: App.Data.JourneyBlockData): number {
         if (block.type === 'quiz') return block.quiz_cards.length;
         if (block.type === 'learn') return block.learn_cards.length;
-        return 1; // compare, prompt, or any custom block = 1 step
+        if (block.type === 'choice') return block.choice_cards.length;
+        return 1; // compare, speech, or any custom block = 1 step
     }
 
     const totalSteps = computed(() =>
@@ -177,13 +178,14 @@ export function useJourneySession(journey: App.Data.LearningJourneyData) {
         const block = journey.blocks[currentBlock.value];
         if (!block) return 'end';
 
-        // Single-step blocks (compare, etc.) → always go to next block
         const items =
             block.type === 'quiz'
                 ? block.quiz_cards
                 : block.type === 'learn'
                   ? block.learn_cards
-                  : [null]; // compare/custom = 1 virtual item
+                  : block.type === 'choice'
+                    ? block.choice_cards
+                    : [null]; // compare, speech = 1 virtual item
 
         if (currentItem.value < items.length - 1) {
             currentItem.value++;

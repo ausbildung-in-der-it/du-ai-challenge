@@ -18,5 +18,7 @@ class JourneyBlockData extends Data
         public array $quiz_cards,
         /** @var LearnCardData[] */
         public array $learn_cards,
+        /** @var ChoiceCardData[] */
+        public array $choice_cards,
     ) {}
 }

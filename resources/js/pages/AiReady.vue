@@ -924,20 +924,10 @@ function checkout() {
                     Sichere Zahlung über Stripe. Rechnung mit ausgewiesener MwSt.
                 </p>
 
-                <div class="rounded-2xl bg-[#1c1c1e] p-5 text-left ring-1 ring-white/[0.06] sm:p-6">
-                    <p class="mb-3 text-[12px] font-medium tracking-[0.08em] text-white/20 uppercase">Was das im Vergleich bedeutet</p>
-                    <div class="space-y-2.5 text-[14px] text-white/35 sm:text-[15px]">
-                        <p>Fraunhofer AI-Kompakteinstieg: <span class="text-white/50">590 &euro; / Teilnehmer</span></p>
-                        <p>SoSafe, KnowBe4: <span class="text-white/50">Per-Seat-Lizenz, ab 25 &euro; / User / Monat</span></p>
-                        <p>Corporate AI-Trainings: <span class="text-white/50">25.000–50.000 &euro;</span></p>
-                    </div>
-                    <div class="mt-4 border-t border-white/[0.06] pt-4">
-                        <p class="text-[14px] text-white/55 sm:text-[15px]">
-                            <span class="font-semibold text-white">AI Ready:</span>
-                            1.990 &euro; &middot; unbegrenzte User &middot; 12 Monate &middot; inkl. Workshop
-                        </p>
-                    </div>
-                </div>
+                <p class="text-[14px] leading-[1.6] text-white/25 sm:text-[15px]">
+                    Vergleichbare Trainingsprogramme kosten ein Vielfaches —
+                    und rechnen pro Teilnehmer ab.
+                </p>
             </div>
         </section>
 

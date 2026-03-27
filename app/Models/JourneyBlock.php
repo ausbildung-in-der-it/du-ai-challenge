@@ -34,4 +34,10 @@ class JourneyBlock extends Model
     {
         return $this->hasMany(LearnCard::class)->orderBy('position');
     }
+
+    /** @return HasMany<ChoiceCard, $this> */
+    public function choiceCards(): HasMany
+    {
+        return $this->hasMany(ChoiceCard::class)->orderBy('position');
+    }
 }

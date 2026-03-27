@@ -4,6 +4,7 @@ import { ArrowRight, RotateCcw, Zap } from 'lucide-vue-next';
 import QuizCard from './QuizCard.vue';
 import LearnCard from './LearnCard.vue';
 import AiCompareBlock from './AiCompareBlock.vue';
+import ChoiceCard from './ChoiceCard.vue';
 import SpeechBlock from './SpeechBlock.vue';
 import PersonaInterstitial from './PersonaInterstitial.vue';
 import PromptReveal from './PromptReveal.vue';
@@ -225,6 +226,12 @@ const endMessage = computed(() => {
                     :quiz-card-id="currentBlock.config?.quiz_card_id ?? 0"
                     :headline="currentBlock.config?.headline ?? ''"
                     :is-real="currentBlock.config?.is_real ?? true"
+                    @next="advanceToNext"
+                />
+                <ChoiceCard
+                    v-else-if="currentBlock.type === 'choice'"
+                    :key="`choice-${session.currentBlock.value}-${session.currentItem.value}`"
+                    :card="currentBlock.choice_cards[session.currentItem.value]"
                     @next="advanceToNext"
                 />
                 <SpeechBlock

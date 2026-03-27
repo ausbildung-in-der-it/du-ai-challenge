@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\ChoiceCardData;
 use App\Data\JourneyBlockData;
 use App\Data\LearnCardData;
 use App\Data\LearningJourneyData;
@@ -18,6 +19,7 @@ class JourneyController extends Controller
         $journey->load([
             'blocks.quizCards',
             'blocks.learnCards',
+            'blocks.choiceCards',
         ]);
 
         return Inertia::render('Journey/Show', [
@@ -50,6 +52,14 @@ class JourneyController extends Controller
                         title: $card->title,
                         content: $card->content,
                         icon: $card->icon,
+                        position: $card->position,
+                    ))->all(),
+                    choice_cards: $block->choiceCards->map(fn ($card) => new ChoiceCardData(
+                        id: $card->id,
+                        question: $card->question,
+                        options: $card->options,
+                        correct_index: $card->correct_index,
+                        explanation: $card->explanation,
                         position: $card->position,
                     ))->all(),
                 ))->all(),
