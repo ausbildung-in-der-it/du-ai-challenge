@@ -27,11 +27,7 @@ const isGiveawayModalOpen = ref(false);
 
             <!-- Hero Card: Challenge -->
             <section class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/[0.04] sm:p-8 dark:bg-[#1c1c1e] dark:ring-white/[0.06]">
-                <p class="text-[12px] font-semibold tracking-[0.14em] text-[#86868b] uppercase dark:text-[#98989d]">
-                    Data Unplugged 2026
-                </p>
-
-                <div class="mt-5 lg:flex lg:items-start lg:gap-10">
+                <div class="lg:flex lg:items-start lg:gap-10">
                     <div class="flex-1">
                         <div class="inline-flex items-center gap-2 rounded-full border border-[#34c759]/25 bg-[#34c759]/8 px-3 py-1 text-[12px] font-semibold text-[#248a3d] dark:bg-[#34c759]/10 dark:text-[#7ce89d]">
                             <Trophy class="h-3.5 w-3.5" />
@@ -39,7 +35,7 @@ const isGiveawayModalOpen = ref(false);
                         </div>
 
                         <h1 class="mt-5 text-[30px] leading-[1.06] font-bold tracking-[-0.8px] sm:text-[42px]">
-                            Spiel die Challenge.
+                            Spiel die KI-Challenge.
                             <span class="text-[#007aff]">Gewinn das AI Training für deine Firma.</span>
                         </h1>
 
