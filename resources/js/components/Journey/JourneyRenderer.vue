@@ -284,24 +284,26 @@ const endMessage = computed(() => {
             </div>
 
             <!-- AI Ready CTA Card -->
-            <a
-                href="/ai-ready"
-                class="mb-4 block rounded-2xl bg-gradient-to-br from-[#007aff] to-[#5856d6] p-6 shadow-lg shadow-[#007aff]/20 transition-all active:scale-[0.98]"
-            >
-                <div class="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
-                    <Zap class="h-5 w-5 text-white" />
+            <div class="mb-4 overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.04] dark:bg-[#1c1c1e] dark:ring-white/[0.06]">
+                <div class="p-6">
+                    <p class="mb-1 text-[11px] font-bold tracking-wider text-[#ff9f0a] uppercase">
+                        Ab August 2026 Pflicht
+                    </p>
+                    <h3 class="mb-2 text-[22px] leading-[1.2] font-bold tracking-[-0.4px] text-[#1d1d1f] dark:text-[#f5f5f7]">
+                        Dein Team braucht KI-Kompetenz. Jetzt.
+                    </h3>
+                    <p class="mb-5 text-[15px] leading-[1.5] text-[#86868b] dark:text-[#98989d]">
+                        Der EU AI Act macht KI-Schulungen zur Pflicht. Unser AI Ready Training bringt dein Team in 2 Tagen auf den Stand — mit genau solchen interaktiven Formaten wie diesem Quiz.
+                    </p>
+                    <a
+                        href="/ai-ready"
+                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1d1d1f] px-5 py-3.5 text-[17px] font-semibold tracking-[-0.2px] text-white transition-all active:scale-[0.97] dark:bg-[#f5f5f7] dark:text-[#1d1d1f]"
+                    >
+                        AI Ready Training anfragen
+                        <ArrowRight class="h-4.5 w-4.5" />
+                    </a>
                 </div>
-                <h3 class="mb-1 text-[20px] font-bold tracking-[-0.3px] text-white">
-                    AI Ready
-                </h3>
-                <p class="mb-4 text-[14px] leading-[1.5] text-white/75">
-                    Das komplette KI-Training für dein Team. Von den Grundlagen bis zur Umsetzung — praxisnah, interaktiv, sofort anwendbar.
-                </p>
-                <span class="inline-flex items-center gap-1.5 text-[15px] font-semibold text-white">
-                    Mehr erfahren
-                    <ArrowRight class="h-4 w-4" />
-                </span>
-            </a>
+            </div>
 
             <!-- Nochmal spielen (secondary) -->
             <button
