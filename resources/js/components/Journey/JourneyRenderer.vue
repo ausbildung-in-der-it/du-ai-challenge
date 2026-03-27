@@ -11,6 +11,7 @@ import PersonaInterstitial from './PersonaInterstitial.vue';
 import PromptReveal from './PromptReveal.vue';
 import { useJourneySession } from '@/composables/useJourneySession';
 import { useStreamText } from '@/composables/useStreamText';
+import posthog from 'posthog-js';
 
 const props = defineProps<{
     journey: App.Data.LearningJourneyData;
@@ -44,11 +45,13 @@ onMounted(async () => {
 async function start() {
     await session.startSession();
     screen.value = 'journey';
+    posthog.capture('journey_started', { journey_slug: props.journey.slug, journey_title: props.journey.title });
 }
 
 function restart() {
     localStorage.removeItem(`du-journey-session-${props.journey.slug}`);
     screen.value = 'start';
+    posthog.capture('journey_restarted', { journey_slug: props.journey.slug, journey_title: props.journey.title });
 }
 
 async function onQuizAnswered(userSaidReal: boolean) {
@@ -74,6 +77,7 @@ function onQuizNext() {
 
 async function onPersonaSet(style: string) {
     await session.setPersona(style);
+    posthog.capture('persona_selected', { persona_style: style, journey_slug: props.journey.slug });
 
     const block = currentBlock.value;
     if (block?.type === 'quiz' && session.sessionId.value) {
@@ -130,7 +134,17 @@ function onPromptRevealNext() {
 
 async function advanceToNext() {
     const result = await session.advance();
-    screen.value = result === 'end' ? 'end' : 'journey';
+    if (result === 'end') {
+        screen.value = 'end';
+        posthog.capture('journey_completed', {
+            journey_slug: props.journey.slug,
+            journey_title: props.journey.title,
+            correct_count: session.correctCount.value,
+            total_quiz_cards: session.totalQuizCards.value,
+        });
+    } else {
+        screen.value = 'journey';
+    }
 }
 
 const endTitle = computed(() => {
@@ -312,6 +326,7 @@ const endMessage = computed(() => {
                     <a
                         href="/ai-ready"
                         class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1d1d1f] px-5 py-3.5 text-[17px] font-semibold tracking-[-0.2px] text-white transition-all active:scale-[0.97] dark:bg-[#f5f5f7] dark:text-[#1d1d1f]"
+                        @click="posthog.capture('ai_ready_cta_clicked', { source: 'journey_end', journey_slug: journey.slug })"
                     >
                         Mehr erfahren
                         <ArrowRight class="h-4.5 w-4.5" />
