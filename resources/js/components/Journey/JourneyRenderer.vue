@@ -193,6 +193,12 @@ const endMessage = computed(() => {
             >
                 Los geht's
             </button>
+            <a
+                href="/"
+                class="mt-4 text-[15px] font-medium text-[#86868b] transition-colors hover:text-[#1d1d1f] dark:text-[#98989d] dark:hover:text-[#f5f5f7]"
+            >
+                Zur Übersicht
+            </a>
         </div>
 
         <!-- JOURNEY -->
