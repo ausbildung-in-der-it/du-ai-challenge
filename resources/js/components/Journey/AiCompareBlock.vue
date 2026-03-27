@@ -31,6 +31,7 @@ defineEmits<{
 const results = ref<EvalResult[]>([]);
 const loading = ref(true);
 const allDone = ref(false);
+const canSkip = ref(false);
 
 function getXsrfToken(): string {
     return (
@@ -43,6 +44,11 @@ function getXsrfToken(): string {
 }
 
 onMounted(async () => {
+    // Failsafe: allow skip after 15 seconds regardless
+    const skipTimer = setTimeout(() => {
+        canSkip.value = true;
+    }, 15000);
+
     try {
         const res = await fetch('/api/ai-compare/stream', {
             method: 'POST',
@@ -96,6 +102,7 @@ onMounted(async () => {
 
     loading.value = false;
     allDone.value = true;
+    clearTimeout(skipTimer);
 });
 
 function parseResponse(response: string): {
@@ -348,7 +355,7 @@ const providerColors: Record<string, string> = {
         <div class="shrink-0 px-5 pb-5">
             <button
                 class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#007aff] px-4 py-4 text-[17px] font-semibold tracking-[-0.2px] text-white transition-all active:scale-[0.97] disabled:opacity-40"
-                :disabled="!allDone"
+                :disabled="!allDone && !canSkip"
                 @click="$emit('next')"
             >
                 Weiter
