@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { CheckCircle2, LoaderCircle } from 'lucide-vue-next';
 import { store as storeNewsletterLead } from '@/actions/App/Http/Controllers/NewsletterLeadController';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -57,6 +57,11 @@ function clearErrors() {
     });
     globalError.value = null;
 }
+
+watch(
+    () => [form.email, form.linkedin_url, form.privacy_accepted],
+    () => clearErrors(),
+);
 
 async function submit() {
     if (processing.value || submitted.value) {
