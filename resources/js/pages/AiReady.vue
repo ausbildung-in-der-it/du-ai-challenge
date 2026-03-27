@@ -68,53 +68,66 @@ function checkout() {
 <template>
     <div class="min-h-dvh bg-black font-sans text-[#f5f5f7] antialiased">
         <!-- HERO -->
-        <section
-            class="relative flex min-h-dvh flex-col items-center justify-center px-7 pt-16 pb-12 text-center sm:px-8"
-        >
-            <div class="max-w-2xl">
-                <p
-                    class="mb-5 text-[13px] font-medium tracking-[0.1em] text-white/25 uppercase sm:text-[15px]"
-                >
-                    AI Literacy · AI Security · EU AI Act
-                </p>
-                <h1
-                    class="mb-5 text-[32px] leading-[1.1] font-bold tracking-[-1px] sm:text-[48px] lg:text-[60px]"
-                >
-                    Alle reden über KI.<br />
-                    <span class="text-[#007aff]"
-                        >Wir machen euer Team ready.</span
-                    >
-                </h1>
-                <p
-                    class="mx-auto mb-8 max-w-md text-[16px] leading-[1.6] text-white/55 sm:text-[19px]"
-                >
-                    7 Hands-on Module. Interaktive Simulationen mit echtem
-                    AI-Backend. Nicht zuschauen — selber machen.
-                </p>
-                <div
-                    class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
-                >
-                    <a
-                        href="#angebot"
-                        class="group inline-flex items-center gap-2 rounded-full bg-[#007aff] px-8 py-3.5 text-[16px] font-semibold text-white shadow-lg shadow-[#007aff]/25 transition-all hover:shadow-[#007aff]/40 active:scale-[0.97]"
-                    >
-                        Zum Angebot
-                        <ArrowRight
-                            class="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                        />
-                    </a>
-                    <a
-                        href="/journey/real-or-fake"
-                        class="group inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-[16px] font-medium text-white/50 ring-1 ring-white/[0.1] transition-all hover:text-white/70 hover:ring-white/[0.2] active:scale-[0.97]"
-                    >
-                        <Play class="h-4 w-4" />
-                        Erst das Quiz ausprobieren
-                    </a>
+        <section class="px-5 pt-8 pb-4 sm:px-8 sm:pt-12">
+            <div class="mx-auto max-w-3xl">
+                <div class="overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_top_left,_rgba(0,122,255,0.3),_transparent_45%),linear-gradient(160deg,#131418_0%,#090a0d_72%)] p-6 ring-1 ring-white/[0.08] sm:p-10">
+                    <div class="flex items-center gap-3">
+                        <p class="text-[12px] font-semibold tracking-[0.14em] text-white/30 uppercase">
+                            AI Ready
+                        </p>
+                        <div class="inline-flex items-center gap-1.5 rounded-full border border-[#ff9f0a]/25 bg-[#ff9f0a]/8 px-2.5 py-0.5 text-[11px] font-semibold text-[#ff9f0a]">
+                            Nur 10 Plätze
+                        </div>
+                    </div>
+
+                    <h1 class="mt-5 text-[28px] leading-[1.08] font-bold tracking-[-0.8px] sm:text-[44px] lg:text-[52px]">
+                        Dein Team fit für KI —<br />
+                        <span class="text-[#007aff]">bevor es die Konkurrenz tut.</span>
+                    </h1>
+
+                    <p class="mt-5 max-w-lg text-[16px] leading-[1.65] text-white/50 sm:text-[19px]">
+                        7 Hands-on Module. Dein Team lernt KI-Agenten einzusetzen,
+                        Risiken zu erkennen und den EU AI Act zu erfüllen.
+                        Inkl. Workshop und unbegrenzten Lizenzen.
+                    </p>
+
+                    <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <a
+                            href="#angebot"
+                            class="group inline-flex items-center justify-center gap-2 rounded-full bg-[#007aff] px-8 py-3.5 text-[16px] font-semibold text-white shadow-lg shadow-[#007aff]/25 transition-all hover:shadow-[#007aff]/40 active:scale-[0.97]"
+                        >
+                            Platz sichern · 1.990 €
+                            <ArrowRight class="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                        </a>
+                        <a
+                            href="/journey/real-or-fake"
+                            class="group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-medium text-white/45 transition-all hover:text-white/65 active:scale-[0.97]"
+                        >
+                            <Play class="h-4 w-4" />
+                            Erst das Quiz ausprobieren
+                        </a>
+                    </div>
+
+                    <div class="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-white/35">
+                        <span class="flex items-center gap-1.5">
+                            <Check class="h-3.5 w-3.5 text-[#34c759]" />
+                            Unbegrenzte User
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <Check class="h-3.5 w-3.5 text-[#34c759]" />
+                            Remote-Workshop inkl.
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <Check class="h-3.5 w-3.5 text-[#34c759]" />
+                            EU AI Act Zertifikate
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <Check class="h-3.5 w-3.5 text-[#34c759]" />
+                            Start 01.06.2026
+                        </span>
+                    </div>
                 </div>
             </div>
-            <ChevronDown
-                class="absolute bottom-6 h-5 w-5 animate-bounce text-white/15"
-            />
         </section>
 
         <!-- QUIZ BRIDGE — Für Leute die vom Talk / Quiz kommen -->
@@ -223,45 +236,41 @@ function checkout() {
             "
         >
             <div class="mx-auto max-w-2xl">
-                <p
-                    class="mb-8 text-[13px] font-medium tracking-[0.1em] text-white/20 uppercase"
-                >
+                <p class="mb-8 text-[13px] font-medium tracking-[0.1em] text-white/20 uppercase">
                     Wer dahinter steht
                 </p>
-                <div
-                    class="space-y-5 text-[16px] leading-[1.7] text-white/60 sm:text-[18px]"
-                >
-                    <p>
-                        Ich bin
-                        <span class="font-semibold text-white">Noel Lang</span>.
-                        Gründer, Entwickler, Didaktiker.
-                    </p>
+
+                <div class="mb-8 flex items-start gap-5 sm:gap-6">
+                    <img
+                        src="/noel-lang.jpg"
+                        alt="Noel Lang"
+                        class="h-20 w-20 shrink-0 rounded-2xl object-cover ring-1 ring-white/[0.08] sm:h-24 sm:w-24"
+                    />
+                    <div>
+                        <h3 class="text-[20px] font-bold tracking-[-0.3px] sm:text-[22px]">Noel Lang</h3>
+                        <p class="mt-1 text-[14px] text-white/40">Gründer, Entwickler, Didaktiker</p>
+                        <p class="mt-1 text-[13px] text-white/25">
+                            <a href="https://ausbildung-in-der-it.de" target="_blank" rel="noopener" class="underline decoration-white/10 underline-offset-2 transition-colors hover:text-white/40">
+                                ausbildung-in-der-it.de
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-5 text-[16px] leading-[1.7] text-white/60 sm:text-[18px]">
                     <p>
                         Ich nutze KI-Agents jeden Tag — nicht als Experiment,
                         als Arbeitswerkzeug. Ich baue damit Produkte, analysiere
                         Daten, automatisiere Prozesse.
                     </p>
                     <p>
-                        Und ich baue seit Jahren digitale Lernerfahrungen. Mit
-                        meiner Plattform
-                        <a
-                            href="https://ausbildung-in-der-it.de"
-                            target="_blank"
-                            rel="noopener"
-                            class="font-medium text-[#007aff] underline decoration-[#007aff]/30 underline-offset-2 transition-colors hover:text-[#007aff]/80"
-                        >
-                            ausbildung-in-der-it.de
-                        </a>
+                        Mit meiner Plattform
+                        <a href="https://ausbildung-in-der-it.de" target="_blank" rel="noopener" class="font-medium text-[#007aff] underline decoration-[#007aff]/30 underline-offset-2 transition-colors hover:text-[#007aff]/80">ausbildung-in-der-it.de</a>
                         haben wir über
-                        <span class="font-semibold text-white"
-                            >20.000 Lernende</span
-                        >
+                        <span class="font-semibold text-white">20.000 Lernende</span>
                         durch ihre IHK-Abschlussprüfungen begleitet.
-                    </p>
-                    <p>
                         Unsere Kunden reichen von Fortune-500-Unternehmen über
                         Landesbehörden bis zum klassischen Systemhaus.
-                        <!-- TODO: Kundenlogos oder konkrete Referenzen -->
                     </p>
                     <p class="text-white/75">
                         Diese Erfahrung fließt direkt in
@@ -271,6 +280,31 @@ function checkout() {
                         Simulationen, in denen dein Team KI wirklich erlebt.
                     </p>
                 </div>
+
+                <!-- d:u 2023 Speaker Reference -->
+                <a
+                    href="https://www.youtube.com/watch?v=SUGYMgBLcd8"
+                    target="_blank"
+                    rel="noopener"
+                    class="group mt-8 flex gap-4 rounded-2xl bg-[#1c1c1e] p-4 ring-1 ring-white/[0.06] transition-all hover:ring-white/[0.12] active:scale-[0.99]"
+                >
+                    <img
+                        src="/du23-talk-thumb.jpg"
+                        alt="Data Unplugged 2023 Talk"
+                        class="h-20 w-28 shrink-0 rounded-xl object-cover sm:h-24 sm:w-36"
+                    />
+                    <div class="min-w-0 flex-1">
+                        <p class="text-[11px] font-semibold tracking-[0.1em] text-[#ff9f0a] uppercase">
+                            Speaker seit 2023
+                        </p>
+                        <p class="mt-1.5 text-[15px] font-semibold leading-[1.35]">
+                            Bereits bei der ersten data:unplugged als Speaker auf der Bühne
+                        </p>
+                        <p class="mt-1 text-[13px] text-white/30 transition-colors group-hover:text-white/45">
+                            Video ansehen →
+                        </p>
+                    </div>
+                </a>
             </div>
         </section>
 
@@ -1420,64 +1454,64 @@ function checkout() {
         <section
             id="angebot"
             data-animate
-            class="px-7 py-20 transition-all duration-700 sm:px-8 sm:py-28"
-            :class="
-                isVisible('angebot')
-                    ? 'translate-y-0 opacity-100'
-                    : 'translate-y-8 opacity-0'
-            "
+            class="px-5 py-20 transition-all duration-700 sm:px-8 sm:py-28"
+            :class="isVisible('angebot') ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'"
         >
-            <div class="mx-auto max-w-lg text-center">
-                <p
-                    class="mb-5 text-[13px] font-medium tracking-[0.1em] text-[#34c759]/50 uppercase"
-                >
-                    Mitwirkungsphase · 10 Plätze · Start
-                    01.06.2026
-                </p>
-                <div
-                    class="mb-2 text-[48px] leading-none font-bold tracking-[-2px] sm:text-[64px]"
-                >
-                    1.990
-                    <span
-                        class="text-[24px] font-semibold text-white/25 sm:text-[32px]"
-                        >€</span
+            <div class="mx-auto max-w-lg">
+                <div class="overflow-hidden rounded-[28px] bg-[radial-gradient(circle_at_bottom_right,_rgba(52,199,89,0.15),_transparent_50%),linear-gradient(160deg,#131418_0%,#090a0d_72%)] p-6 ring-1 ring-white/[0.08] sm:p-8">
+                    <div class="flex items-center justify-between">
+                        <p class="text-[12px] font-semibold tracking-[0.14em] text-white/30 uppercase">
+                            AI Ready · Early Access
+                        </p>
+                        <div class="inline-flex items-center gap-1.5 rounded-full border border-[#ff9f0a]/25 bg-[#ff9f0a]/8 px-2.5 py-0.5 text-[11px] font-semibold text-[#ff9f0a]">
+                            Nur 10 Plätze
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <div class="text-[48px] leading-none font-bold tracking-[-2px] sm:text-[56px]">
+                            1.990 <span class="text-[24px] font-semibold text-white/25 sm:text-[28px]">€</span>
+                        </div>
+                        <p class="mt-2 text-[14px] text-white/30">
+                            zzgl. MwSt. · Einmalzahlung · keine laufenden Kosten
+                        </p>
+                    </div>
+
+                    <button
+                        :disabled="isCheckingOut"
+                        class="group mt-7 inline-flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-2xl bg-[#007aff] px-8 py-4 text-[17px] font-semibold text-white shadow-lg shadow-[#007aff]/25 transition-all hover:shadow-[#007aff]/40 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50"
+                        @click="checkout"
                     >
+                        <template v-if="isCheckingOut">
+                            <div class="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            Weiterleitung zu Stripe...
+                        </template>
+                        <template v-else>
+                            Jetzt Platz sichern
+                            <ArrowRight class="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+                        </template>
+                    </button>
+
+                    <div class="mt-6 space-y-2.5">
+                        <div v-for="item in [
+                            '7 Module · AI Literacy + AI Security',
+                            'Unbegrenzte User-Lizenzen für 12 Monate',
+                            'Halbtägiger Remote-Workshop (3h) mit Live-Demos',
+                            'EU AI Act Compliance-Zertifikate pro Mitarbeiter',
+                            'SCORM-Export für euer bestehendes LMS',
+                        ]" :key="item" class="flex items-start gap-2.5 text-[14px] text-white/50">
+                            <Check class="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#34c759]" />
+                            {{ item }}
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex items-center gap-3 border-t border-white/[0.06] pt-5">
+                        <Shield class="h-4 w-4 shrink-0 text-white/20" />
+                        <p class="text-[12px] text-white/25">
+                            Sichere Zahlung über Stripe · Rechnung mit ausgewiesener MwSt. · Start 01.06.2026
+                        </p>
+                    </div>
                 </div>
-                <p class="mb-8 text-[15px] text-white/30">
-                    zzgl. MwSt. · Einmalzahlung · keine laufenden
-                    Kosten
-                </p>
-
-                <button
-                    :disabled="isCheckingOut"
-                    class="group mb-8 inline-flex w-full max-w-sm cursor-pointer items-center justify-center gap-2.5 rounded-2xl bg-[#007aff] px-8 py-4.5 text-[17px] font-semibold text-white shadow-lg shadow-[#007aff]/25 transition-all hover:shadow-[#007aff]/40 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 sm:text-[18px]"
-                    @click="checkout"
-                >
-                    <template v-if="isCheckingOut">
-                        <div
-                            class="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"
-                        />
-                        Weiterleitung zu Stripe...
-                    </template>
-                    <template v-else>
-                        Jetzt Platz sichern
-                        <ArrowRight
-                            class="h-5 w-5 transition-transform group-hover:translate-x-0.5"
-                        />
-                    </template>
-                </button>
-
-                <p class="mb-8 text-[13px] text-white/20">
-                    Sichere Zahlung über Stripe. Rechnung mit ausgewiesener
-                    MwSt.
-                </p>
-
-                <p
-                    class="text-[14px] leading-[1.6] text-white/25 sm:text-[15px]"
-                >
-                    Vergleichbare Trainingsprogramme kosten ein Vielfaches — und
-                    rechnen pro Teilnehmer ab.
-                </p>
             </div>
         </section>
 
