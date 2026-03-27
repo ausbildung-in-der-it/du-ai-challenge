@@ -89,7 +89,12 @@ async function submit() {
 
         if (response.status === 422) {
             const payload = await response.json();
-            Object.assign(errors, payload.errors ?? {});
+            const rawErrors = payload.errors ?? {};
+            const flatErrors: Record<string, string> = {};
+            for (const [key, value] of Object.entries(rawErrors)) {
+                flatErrors[key] = Array.isArray(value) ? value[0] : (value as string);
+            }
+            Object.assign(errors, flatErrors);
             return;
         }
 
