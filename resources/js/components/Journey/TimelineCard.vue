@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { ChevronRight, GitCommit, Clock, Sparkles, ArrowRight } from 'lucide-vue-next';
 
-interface Commit {
+interface CommitData {
     hash: string;
     message: string;
     time: string;
@@ -13,9 +13,6 @@ const props = defineProps<{
     config: {
         title: string;
         subtitle: string;
-        commits: Commit[];
-        total_commits: number;
-        duration: string;
         teaser_headline: string;
         teaser_text: string;
     };
@@ -23,13 +20,62 @@ const props = defineProps<{
 
 defineEmits<{ next: [] }>();
 
+const allCommits = ref<CommitData[]>([]);
+const totalCommits = ref(0);
+const durationMinutes = ref(0);
+const loading = ref(true);
 const visibleCount = ref(0);
 const showTeaser = ref(false);
 
-onMounted(() => {
+const maxShown = 7;
+const displayedCommits = computed(() => allCommits.value.slice(0, maxShown));
+const hiddenCount = computed(() => Math.max(0, totalCommits.value - maxShown));
+
+const durationLabel = computed(() => {
+    const h = Math.floor(durationMinutes.value / 60);
+    const m = durationMinutes.value % 60;
+    const parts: string[] = [];
+    if (h > 0) parts.push(`${h} Stunde${h > 1 ? 'n' : ''}`);
+    if (m > 0) parts.push(`${m} Minuten`);
+    return `${parts.join(' ')} · ${totalCommits.value} Commits`;
+});
+
+function getXsrfToken(): string {
+    return (
+        document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1]
+            ?.replace(/%3D/g, '=') ?? ''
+    );
+}
+
+onMounted(async () => {
+    try {
+        const res = await fetch('/api/git-commits', {
+            headers: {
+                Accept: 'application/json',
+                'X-XSRF-TOKEN': getXsrfToken(),
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            allCommits.value = data.commits;
+            totalCommits.value = data.total;
+            durationMinutes.value = data.duration_minutes;
+        }
+    } catch {
+        // Silently fail — card still shows title/teaser
+    } finally {
+        loading.value = false;
+    }
+
+    // Start staggered animation
     let i = 0;
     const interval = setInterval(() => {
-        if (i < props.config.commits.length) {
+        if (i < displayedCommits.value.length) {
             visibleCount.value = i + 1;
             i++;
         } else {
@@ -67,81 +113,92 @@ onMounted(() => {
                         {{ config.subtitle }}
                     </p>
 
-                    <!-- Duration badge -->
-                    <div
-                        class="mb-5 inline-flex items-center gap-1.5 rounded-full bg-[#30d158]/10 px-3 py-1.5"
-                    >
-                        <Clock class="h-3.5 w-3.5 text-[#30d158]" />
-                        <span class="text-[13px] font-semibold text-[#30d158]">
-                            {{ config.duration }}
+                    <!-- Loading -->
+                    <div v-if="loading" class="flex items-center gap-2 py-4">
+                        <div
+                            class="h-4 w-4 animate-spin rounded-full border-2 border-[#30d158] border-t-transparent"
+                        />
+                        <span class="text-[13px] text-[#86868b] dark:text-[#98989d]">
+                            Lade Git-History…
                         </span>
                     </div>
 
-                    <!-- Git Timeline -->
-                    <div class="relative ml-3 border-l-2 border-[#30d158]/20 pl-5">
-                        <TransitionGroup
-                            enter-active-class="transition-all duration-400 ease-out"
-                            enter-from-class="opacity-0 translate-x-3"
-                            enter-to-class="opacity-100 translate-x-0"
+                    <template v-else-if="displayedCommits.length > 0">
+                        <!-- Duration badge -->
+                        <div
+                            class="mb-5 inline-flex items-center gap-1.5 rounded-full bg-[#30d158]/10 px-3 py-1.5"
                         >
-                            <div
-                                v-for="(commit, i) in config.commits.slice(0, visibleCount)"
-                                :key="commit.hash"
-                                class="relative mb-4 last:mb-0"
-                            >
-                                <!-- Dot on timeline -->
-                                <div
-                                    class="absolute -left-[27px] top-[5px] h-3 w-3 rounded-full border-2 border-[#30d158] bg-white dark:bg-[#1c1c1e]"
-                                />
+                            <Clock class="h-3.5 w-3.5 text-[#30d158]" />
+                            <span class="text-[13px] font-semibold text-[#30d158]">
+                                {{ durationLabel }}
+                            </span>
+                        </div>
 
-                                <!-- Time label -->
-                                <span
-                                    class="text-[11px] font-medium tracking-wide text-[#30d158] tabular-nums"
+                        <!-- Git Timeline -->
+                        <div class="relative ml-3 border-l-2 border-[#30d158]/20 pl-5">
+                            <TransitionGroup
+                                enter-active-class="transition-all duration-400 ease-out"
+                                enter-from-class="opacity-0 translate-x-3"
+                                enter-to-class="opacity-100 translate-x-0"
+                            >
+                                <div
+                                    v-for="commit in displayedCommits.slice(0, visibleCount)"
+                                    :key="commit.hash"
+                                    class="relative mb-4 last:mb-0"
                                 >
-                                    {{ commit.time }} Uhr
-                                    <span class="text-[#86868b]/50 dark:text-[#98989d]/50">
-                                        · +{{ commit.minutes_in }} min
+                                    <!-- Dot on timeline -->
+                                    <div
+                                        class="absolute -left-[27px] top-[5px] h-3 w-3 rounded-full border-2 border-[#30d158] bg-white dark:bg-[#1c1c1e]"
+                                    />
+
+                                    <!-- Time label -->
+                                    <span
+                                        class="text-[11px] font-medium tracking-wide text-[#30d158] tabular-nums"
+                                    >
+                                        {{ commit.time }} Uhr
+                                        <span class="text-[#86868b]/50 dark:text-[#98989d]/50">
+                                            · +{{ commit.minutes_in }} min
+                                        </span>
                                     </span>
-                                </span>
 
-                                <!-- Commit message -->
-                                <p
-                                    class="mt-0.5 text-[14px] leading-[1.4] text-[#1d1d1f] dark:text-[#f5f5f7]"
-                                >
-                                    {{ commit.message }}
-                                </p>
+                                    <!-- Commit message -->
+                                    <p
+                                        class="mt-0.5 text-[14px] leading-[1.4] text-[#1d1d1f] dark:text-[#f5f5f7]"
+                                    >
+                                        {{ commit.message }}
+                                    </p>
 
-                                <!-- Hash -->
-                                <code
-                                    class="mt-0.5 text-[11px] text-[#86868b]/40 dark:text-[#98989d]/40"
-                                >
-                                    {{ commit.hash }}
-                                </code>
-                            </div>
-                        </TransitionGroup>
+                                    <!-- Hash -->
+                                    <code
+                                        class="mt-0.5 text-[11px] text-[#86868b]/40 dark:text-[#98989d]/40"
+                                    >
+                                        {{ commit.hash }}
+                                    </code>
+                                </div>
+                            </TransitionGroup>
 
-                        <!-- More commits teaser -->
-                        <Transition
-                            enter-active-class="transition-all duration-400 ease-out"
-                            enter-from-class="opacity-0"
-                            enter-to-class="opacity-100"
-                        >
-                            <div
-                                v-if="visibleCount >= config.commits.length"
-                                class="relative mb-0 pt-1"
+                            <!-- More commits teaser -->
+                            <Transition
+                                enter-active-class="transition-all duration-400 ease-out"
+                                enter-from-class="opacity-0"
+                                enter-to-class="opacity-100"
                             >
                                 <div
-                                    class="absolute -left-[27px] top-[9px] h-3 w-3 rounded-full border-2 border-dashed border-[#86868b]/30 bg-white dark:bg-[#1c1c1e]"
-                                />
-                                <p
-                                    class="text-[13px] text-[#86868b] italic dark:text-[#98989d]"
+                                    v-if="hiddenCount > 0 && visibleCount >= displayedCommits.length"
+                                    class="relative mb-0 pt-1"
                                 >
-                                    … und {{ config.total_commits - config.commits.length }} weitere
-                                    Commits
-                                </p>
-                            </div>
-                        </Transition>
-                    </div>
+                                    <div
+                                        class="absolute -left-[27px] top-[9px] h-3 w-3 rounded-full border-2 border-dashed border-[#86868b]/30 bg-white dark:bg-[#1c1c1e]"
+                                    />
+                                    <p
+                                        class="text-[13px] text-[#86868b] italic dark:text-[#98989d]"
+                                    >
+                                        … und {{ hiddenCount }} weitere Commits
+                                    </p>
+                                </div>
+                            </Transition>
+                        </div>
+                    </template>
                 </div>
             </div>
 

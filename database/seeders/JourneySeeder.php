@@ -284,17 +284,6 @@ class JourneySeeder extends Seeder
             'config' => [
                 'title' => 'Dieses Quiz? Gebaut in unter 2 Stunden.',
                 'subtitle' => 'Ein KI-Agent (Claude Code) hat diese gesamte Lernreise entwickelt — Backend, Frontend, KI-Integration, Content. Hier ist die echte Git-History:',
-                'duration' => '1 Stunde 40 Minuten · 17 Commits',
-                'commits' => [
-                    ['hash' => 'b901191', 'message' => 'Initial commit: Real or Fake quiz app', 'time' => '23:29', 'minutes_in' => 0],
-                    ['hash' => 'a39df43', 'message' => 'Session persistence + AI commentary + Persona prompt engineering', 'time' => '23:37', 'minutes_in' => 8],
-                    ['hash' => 'd768fd6', 'message' => 'SSE streaming für Low-Latency Festival-Einsatz', 'time' => '23:47', 'minutes_in' => 18],
-                    ['hash' => 'f085ab6', 'message' => '2026-Stories, neue Struktur + Reset-Route', 'time' => '23:59', 'minutes_in' => 30],
-                    ['hash' => '362d10e', 'message' => 'Multi-Provider AI Comparison Block', 'time' => '00:25', 'minutes_in' => 56],
-                    ['hash' => '73417f4', 'message' => 'Speech-to-Text Block + ElevenLabs', 'time' => '00:47', 'minutes_in' => 78],
-                    ['hash' => '1cc80c0', 'message' => 'CTA: Hands-on KI-Agenten bauen', 'time' => '01:08', 'minutes_in' => 99],
-                ],
-                'total_commits' => 17,
                 'teaser_headline' => 'Dein Team soll das auch können?',
                 'teaser_text' => 'In unserem AI Ready Training lernt dein Team, KI-Agenten wie diesen zu bauen — hands-on, mit echten Tools, in echten Projekten. Von Prompt Engineering bis Produktions-Deployment.',
             ],
