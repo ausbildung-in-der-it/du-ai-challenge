@@ -50,7 +50,8 @@ class JourneySeeder extends Seeder
             'is_real' => true,
             'explanation' => 'Emergentes Verhalten: Der Agent hat eigenständig entschieden, dass Crypto-Mining ein lohnendes Ziel ist. Niemand hat ihm das beigebracht.',
             'sources' => [
-                ['title' => 'the-decoder.de', 'url' => 'https://the-decoder.de/alibabas-ki-agent-rome/'],
+                ['title' => 'Axios', 'url' => 'https://www.axios.com/2026/03/07/ai-agents-rome-model-cryptocurrency'],
+                ['title' => 'Live Science', 'url' => 'https://www.livescience.com/technology/artificial-intelligence/an-experimental-ai-agent-broke-out-of-its-testing-environment-and-mined-crypto-without-permission'],
             ],
             'position' => 1,
         ]);
@@ -92,7 +93,10 @@ class JourneySeeder extends Seeder
             'date_label' => '2025',
             'is_real' => false,
             'explanation' => 'Erfunden. Aber KI-Halluzinationen in der Wissenschaft sind real: Der Fake-Begriff "Vegetative Electron Microscopy" steckt in über 22 Fachpublikationen — ein "digitales Fossil".',
-            'sources' => [],
+            'sources' => [
+                ['title' => 'ZME Science', 'url' => 'https://www.zmescience.com/science/news-science/ai-wrong-science-term/'],
+                ['title' => 'The Conversation', 'url' => 'https://theconversation.com/a-weird-phrase-is-plaguing-scientific-papers-and-we-traced-it-back-to-a-glitch-in-ai-training-data-254463'],
+            ],
             'position' => 1,
         ]);
 
@@ -130,7 +134,7 @@ class JourneySeeder extends Seeder
                 'Etwa 83%',
             ],
             'correct_index' => 2,
-            'explanation' => 'Laut aktuellen Studien sind bereits 57% aller Online-Texte KI-generiert. 3 von 4 neuen Webseiten enthalten KI-Inhalte. Allerdings sind 86% der Top-Google-Ergebnisse noch menschengeschrieben — KI dominiert in der Masse, nicht in der Qualität.',
+            'explanation' => 'Laut einer Studie von eWeek/Originality.ai sind bereits 57% aller Online-Texte KI-generiert. 3 von 4 neuen Webseiten enthalten KI-Inhalte (Ahrefs, 2025). Allerdings sind 86% der Top-Google-Ergebnisse noch menschengeschrieben — KI dominiert in der Masse, nicht in der Qualität.',
             'position' => 1,
         ]);
 
@@ -178,7 +182,8 @@ class JourneySeeder extends Seeder
             'is_real' => true,
             'explanation' => 'Die KI analysiert microRNA-Muster und erkennt Krebs teils Jahre vor Symptomen. Eine USC/Johns Hopkins-Studie zeigte sogar Erkennung 10 Jahre im Voraus.',
             'sources' => [
-                ['title' => 'University of Southampton', 'url' => 'https://www.southampton.ac.uk/news/2025/cancer-blood-test'],
+                ['title' => 'Interesting Engineering', 'url' => 'https://interestingengineering.com/health/ai-blood-test-uk-trial-cancer-detection'],
+                ['title' => 'Med Journal Daily', 'url' => 'https://medjournaldaily.com/mionco-dx-blood-test/'],
             ],
             'position' => 0,
         ]);
