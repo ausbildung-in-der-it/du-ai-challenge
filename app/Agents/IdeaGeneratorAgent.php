@@ -14,7 +14,7 @@ use Laravel\Ai\Promptable;
 #[Provider(Lab::Anthropic)]
 #[UseSmartestModel]
 #[Temperature(0.7)]
-#[MaxTokens(2500)]
+#[MaxTokens(8000)]
 #[Timeout(90)]
 class IdeaGeneratorAgent implements Agent
 {

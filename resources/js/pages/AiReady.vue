@@ -785,12 +785,12 @@ function checkout() {
                             <GraduationCap class="h-5 w-5 text-[#007aff]" />
                         </div>
                         <div>
-                            <p class="text-[16px] font-semibold leading-[1.4] sm:text-[17px]">Halbtägiger Workshop (3 Stunden)</p>
+                            <p class="text-[16px] font-semibold leading-[1.4] sm:text-[17px]">Halbtägiger Remote-Workshop (3 Stunden)</p>
                             <p class="mt-1 text-[14px] leading-[1.6] text-white/40 sm:text-[15px]">
-                                Remote oder vor Ort, mit mir persönlich. Wir arbeiten die Module
-                                gemeinsam mit deinem Team durch und erarbeiten zusammen eure interne AI-Policy.
-                                Am Ende habt ihr nicht nur geschulte Mitarbeitende,
-                                sondern auch eine dokumentierte Richtlinie.
+                                Mit mir persönlich, per Videocall. Wir gehen gemeinsam durch die Module,
+                                brainstormen Use Cases für euer Unternehmen, und ich zeige euch live,
+                                wie auch Nicht-Entwickler KI-Agenten einsetzen können —
+                                von Make.com-Workflows bis zu Copilot im Alltag.
                             </p>
                         </div>
                     </div>
@@ -957,7 +957,7 @@ function checkout() {
                         </li>
                         <li class="flex items-start gap-2.5">
                             <Check class="mt-0.5 h-4 w-4 shrink-0 text-[#34c759]" />
-                            Halbtägiger Workshop (3h) — remote oder vor Ort
+                            Halbtägiger Remote-Workshop (3h) mit Live-Demos
                         </li>
                         <li class="flex items-start gap-2.5">
                             <Check class="mt-0.5 h-4 w-4 shrink-0 text-[#34c759]" />
@@ -1048,7 +1048,13 @@ function checkout() {
                         noel@ausbildung-in-der-it.de
                     </a>
                 </p>
-                <!-- TODO: Impressum / Datenschutz Links -->
+                <div class="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-1.5">
+                    <a href="https://ausbildung-in-der-it.de/impressum" target="_blank" rel="noopener" class="transition-colors hover:text-white/40">Impressum</a>
+                    <a href="https://ausbildung-in-der-it.de/datenschutz" target="_blank" rel="noopener" class="transition-colors hover:text-white/40">Datenschutz</a>
+                    <a href="https://ausbildung-in-der-it.de/agb" target="_blank" rel="noopener" class="transition-colors hover:text-white/40">AGB</a>
+                    <a href="https://ausbildung-in-der-it.de/widerruf" target="_blank" rel="noopener" class="transition-colors hover:text-white/40">Widerruf</a>
+                    <a href="https://ausbildung-in-der-it.de/kontakt" target="_blank" rel="noopener" class="transition-colors hover:text-white/40">Kontakt</a>
+                </div>
             </div>
         </footer>
     </div>

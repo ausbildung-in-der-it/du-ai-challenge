@@ -286,20 +286,20 @@ const endMessage = computed(() => {
             <!-- AI Ready CTA Card -->
             <div class="mb-4 overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.04] dark:bg-[#1c1c1e] dark:ring-white/[0.06]">
                 <div class="p-6">
-                    <p class="mb-1 text-[11px] font-bold tracking-wider text-[#ff9f0a] uppercase">
-                        Ab August 2026 Pflicht
+                    <p class="mb-1 text-[11px] font-bold tracking-wider text-[#007aff] uppercase">
+                        Hands-on KI-Training
                     </p>
                     <h3 class="mb-2 text-[22px] leading-[1.2] font-bold tracking-[-0.4px] text-[#1d1d1f] dark:text-[#f5f5f7]">
-                        Dein Team braucht KI-Kompetenz. Jetzt.
+                        Dein Team soll eigene KI-Agenten bauen?
                     </h3>
                     <p class="mb-5 text-[15px] leading-[1.5] text-[#86868b] dark:text-[#98989d]">
-                        Der EU AI Act macht KI-Schulungen zur Pflicht. Unser AI Ready Training bringt dein Team in 2 Tagen auf den Stand — mit genau solchen interaktiven Formaten wie diesem Quiz.
+                        In unserem AI Ready Training lernt dein Team hands-on, KI-Agenten zu bauen, Chancen und Grenzen einzuschätzen und KI strategisch einzusetzen — mit genau solchen interaktiven Formaten wie diesem Quiz.
                     </p>
                     <a
                         href="/ai-ready"
                         class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1d1d1f] px-5 py-3.5 text-[17px] font-semibold tracking-[-0.2px] text-white transition-all active:scale-[0.97] dark:bg-[#f5f5f7] dark:text-[#1d1d1f]"
                     >
-                        AI Ready Training anfragen
+                        Mehr erfahren
                         <ArrowRight class="h-4.5 w-4.5" />
                     </a>
                 </div>
