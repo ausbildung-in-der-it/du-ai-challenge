@@ -9,6 +9,7 @@ use App\Data\LearningJourneyData;
 use App\Data\QuizCardData;
 use App\Data\SourceData;
 use App\Models\LearningJourney;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,6 +17,8 @@ class JourneyController extends Controller
 {
     public function show(LearningJourney $journey): Response
     {
+        Log::info('JourneyController@show', ['journey_slug' => $journey->slug]);
+
         $journey->load([
             'blocks.quizCards',
             'blocks.learnCards',

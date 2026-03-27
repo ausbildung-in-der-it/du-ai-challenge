@@ -8,6 +8,7 @@ use App\Models\JourneySession;
 use App\Models\QuizCard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Ai\Responses\StreamableAgentResponse;
 use Laravel\Ai\Responses\StreamedAgentResponse;
 
@@ -23,6 +24,8 @@ class CommentaryController extends Controller
             'quiz_card_id' => ['required', 'integer', 'exists:quiz_cards,id'],
             'persona_style' => ['nullable', 'string', 'max:200'],
         ]);
+
+        Log::info('CommentaryController@store', ['session_id' => $journeySession->nanoid, 'quiz_card_id' => $validated['quiz_card_id']]);
 
         $card = QuizCard::findOrFail($validated['quiz_card_id']);
         $personaStyle = $validated['persona_style'] ?? $journeySession->persona_style;
@@ -65,6 +68,8 @@ class CommentaryController extends Controller
      */
     public function show(JourneySession $journeySession, Commentary $commentary): JsonResponse
     {
+        Log::info('CommentaryController@show', ['session_id' => $journeySession->nanoid, 'commentary_id' => $commentary->nanoid]);
+
         return response()->json([
             'status' => $commentary->status,
             'text' => $commentary->text,
@@ -77,6 +82,8 @@ class CommentaryController extends Controller
      */
     public function latest(JourneySession $journeySession, QuizCard $quizCard): JsonResponse
     {
+        Log::info('CommentaryController@latest', ['session_id' => $journeySession->nanoid, 'quiz_card_id' => $quizCard->id]);
+
         $commentary = Commentary::where('journey_session_id', $journeySession->id)
             ->where('quiz_card_id', $quizCard->id)
             ->latest()

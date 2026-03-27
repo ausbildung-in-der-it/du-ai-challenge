@@ -66,7 +66,7 @@ class JourneySeeder extends Seeder
             'position' => 1,
         ]);
 
-        // ── Block 2: Compare — KI bewertet McKinsey-Story ─
+        // ── Block 2: Compare OHNE Web Search ─────────────
         JourneyBlock::create([
             'learning_journey_id' => $journey->id,
             'type' => 'compare',
@@ -75,6 +75,20 @@ class JourneySeeder extends Seeder
                 'quiz_card_id' => $mckinseyCard->id,
                 'headline' => $mckinseyCard->headline,
                 'is_real' => true,
+                'web_search' => false,
+            ],
+        ]);
+
+        // ── Block 3: Compare MIT Web Search ──────────────
+        JourneyBlock::create([
+            'learning_journey_id' => $journey->id,
+            'type' => 'compare',
+            'position' => $pos++,
+            'config' => [
+                'quiz_card_id' => $mckinseyCard->id,
+                'headline' => $mckinseyCard->headline,
+                'is_real' => true,
+                'web_search' => true,
             ],
         ]);
 

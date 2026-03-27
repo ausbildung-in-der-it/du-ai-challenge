@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Agents\QuizCommentaryAgent;
 use App\Models\QuizCard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Ai\Responses\StreamableAgentResponse;
 
 class QuizCommentaryController extends Controller
@@ -15,6 +16,8 @@ class QuizCommentaryController extends Controller
             'quiz_card_id' => ['required', 'integer', 'exists:quiz_cards,id'],
             'user_said_real' => ['required'],
         ]);
+
+        Log::info('QuizCommentaryController@__invoke', ['quiz_card_id' => $validated['quiz_card_id'], 'user_said_real' => $validated['user_said_real']]);
 
         $card = QuizCard::findOrFail($validated['quiz_card_id']);
 

@@ -241,6 +241,7 @@ const endMessage = computed(() => {
                     :quiz-card-id="currentBlock.config?.quiz_card_id ?? 0"
                     :headline="currentBlock.config?.headline ?? ''"
                     :is-real="currentBlock.config?.is_real ?? true"
+                    :web-search="currentBlock.config?.web_search ?? false"
                     @next="advanceToNext"
                 />
                 <ChoiceCard

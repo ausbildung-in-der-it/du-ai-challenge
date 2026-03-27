@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\GitCommit;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class GitCommitController extends Controller
 {
     public function index(): JsonResponse
     {
+        Log::info('GitCommitController@index');
+
         $commits = GitCommit::orderBy('committed_at')->get();
 
         $first = $commits->first();

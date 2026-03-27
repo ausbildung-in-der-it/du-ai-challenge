@@ -4,6 +4,7 @@ import posthog from 'posthog-js';
 
 posthog.init(import.meta.env.VITE_POSTHOG_PROJECT_TOKEN || '', {
     api_host: import.meta.env.VITE_POSTHOG_HOST || '',
+    cookieless_mode: 'always',
     defaults: '2026-01-30',
 });
 

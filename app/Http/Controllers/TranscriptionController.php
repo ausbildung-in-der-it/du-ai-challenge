@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Ai\Enums\Lab;
 use Laravel\Ai\Responses\StreamableAgentResponse;
 use Laravel\Ai\Transcription;
@@ -17,6 +18,8 @@ class TranscriptionController extends Controller
         $request->validate([
             'audio' => ['required', 'file', 'max:10240'],
         ]);
+
+        Log::info('TranscriptionController@transcribe', ['file_size' => $request->file('audio')?->getSize()]);
 
         $transcript = Transcription::fromUpload($request->file('audio'))
             ->generate(provider: Lab::ElevenLabs);
@@ -32,6 +35,8 @@ class TranscriptionController extends Controller
 
         $text = $request->input('text');
         $wordCount = str_word_count($text);
+
+        Log::info('TranscriptionController@react', ['word_count' => $wordCount]);
 
         return agent(
             instructions: <<<PROMPT

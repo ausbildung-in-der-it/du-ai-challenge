@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Agents\StoryEvaluatorAgent;
+use App\Agents\StoryEvaluatorWithSearchAgent;
 use App\Models\QuizCard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Laravel\Ai\Enums\Lab;
 use Throwable;
 
@@ -20,6 +22,8 @@ class AiCompareController extends Controller
         $validated = $request->validate([
             'quiz_card_id' => ['required', 'integer', 'exists:quiz_cards,id'],
         ]);
+
+        Log::info('AiCompareController@evaluate', ['quiz_card_id' => $validated['quiz_card_id']]);
 
         $card = QuizCard::findOrFail($validated['quiz_card_id']);
         $story = $card->headline.'. '.$card->story;
@@ -46,6 +50,8 @@ class AiCompareController extends Controller
                     'status' => 'done',
                 ];
             } catch (Throwable $e) {
+                Log::error('AiCompareController@evaluate: provider failed', ['provider' => $config['label'], 'model' => $config['model_label'], 'error' => $e->getMessage()]);
+
                 $results[] = [
                     'provider' => $config['label'],
                     'model' => $config['model_label'],
@@ -71,15 +77,25 @@ class AiCompareController extends Controller
     {
         $validated = $request->validate([
             'quiz_card_id' => ['required', 'integer', 'exists:quiz_cards,id'],
+            'web_search' => ['sometimes', 'boolean'],
+        ]);
+
+        $webSearch = filter_var($validated['web_search'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+        Log::info('AiCompareController@stream', [
+            'quiz_card_id' => $validated['quiz_card_id'],
+            'web_search' => $webSearch,
         ]);
 
         $card = QuizCard::findOrFail($validated['quiz_card_id']);
         $story = $card->headline.'. '.$card->story;
         $providers = $this->getAvailableProviders();
 
-        return response()->stream(function () use ($story, $providers) {
+        return response()->stream(function () use ($story, $providers, $webSearch) {
             foreach ($providers as $config) {
-                $agent = new StoryEvaluatorAgent(story: $story);
+                $agent = $webSearch
+                    ? new StoryEvaluatorWithSearchAgent(story: $story)
+                    : new StoryEvaluatorAgent(story: $story);
 
                 try {
                     $response = $agent->prompt(
@@ -97,6 +113,8 @@ class AiCompareController extends Controller
                         'status' => 'done',
                     ];
                 } catch (Throwable $e) {
+                    Log::error('AiCompareController@stream: provider failed', ['provider' => $config['label'], 'model' => $config['model_label'], 'error' => $e->getMessage()]);
+
                     $result = [
                         'provider' => $config['label'],
                         'model' => $config['model_label'],

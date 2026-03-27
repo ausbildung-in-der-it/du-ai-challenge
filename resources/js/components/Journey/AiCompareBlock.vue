@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { Brain, ChevronRight, Zap, Sparkles } from 'lucide-vue-next';
+import { Brain, Globe, ChevronRight, Zap, Sparkles, Search } from 'lucide-vue-next';
 
 type EvalResult = {
     provider: string;
@@ -14,6 +14,7 @@ const props = defineProps<{
     quizCardId: number;
     headline: string;
     isReal: boolean;
+    webSearch?: boolean;
 }>();
 
 defineEmits<{
@@ -43,7 +44,10 @@ onMounted(async () => {
                 'X-XSRF-TOKEN': getXsrfToken(),
                 'X-Requested-With': 'XMLHttpRequest',
             },
-            body: JSON.stringify({ quiz_card_id: props.quizCardId }),
+            body: JSON.stringify({
+                quiz_card_id: props.quizCardId,
+                web_search: props.webSearch ?? false,
+            }),
         });
 
         if (!res.ok || !res.body) {
@@ -106,16 +110,35 @@ const providerColors: Record<string, string> = {
         <div class="flex-1 overflow-y-auto px-5 pb-4">
             <div class="rounded-2xl bg-white shadow-sm ring-1 ring-black/[0.04] dark:bg-[#1c1c1e] dark:ring-white/[0.06]">
                 <div class="p-6">
-                    <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10">
-                        <Brain class="h-6 w-6 text-purple-500" />
+                    <div
+                        class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl"
+                        :class="webSearch ? 'bg-[#34c759]/10' : 'bg-purple-500/10'"
+                    >
+                        <Globe v-if="webSearch" class="h-6 w-6 text-[#34c759]" />
+                        <Brain v-else class="h-6 w-6 text-purple-500" />
+                    </div>
+
+                    <!-- Mode badge -->
+                    <div
+                        class="mb-3 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold tracking-wider uppercase"
+                        :class="webSearch
+                            ? 'bg-[#34c759]/10 text-[#34c759]'
+                            : 'bg-[#ff9f0a]/10 text-[#ff9f0a]'"
+                    >
+                        <Search v-if="webSearch" class="h-3 w-3" />
+                        {{ webSearch ? 'Mit Web-Suche' : 'Ohne Web-Suche' }}
                     </div>
 
                     <h2 class="mb-2 text-[22px] leading-[1.25] font-bold tracking-[-0.4px] text-[#1d1d1f] dark:text-[#f5f5f7]">
-                        Wie bewerten verschiedene KIs diese Story?
+                        {{ webSearch
+                            ? 'Und jetzt: dieselben KIs mit Internet-Zugang'
+                            : 'Wie bewerten verschiedene KIs diese Story?' }}
                     </h2>
 
                     <p class="mb-1 text-[15px] leading-[1.6] text-[#86868b] dark:text-[#98989d]">
-                        Dieselbe Story, {{ results.length > 0 ? results.length : '...' }} verschiedene Modelle. Wer liegt richtig?
+                        {{ webSearch
+                            ? 'Dieselben Modelle, aber jetzt dürfen sie im Web recherchieren. Ändert sich was?'
+                            : 'Nur Trainingswissen, kein Internet. Wer liegt richtig?' }}
                     </p>
 
                     <p class="mb-5 text-[13px] font-medium text-[#1d1d1f] dark:text-[#f5f5f7]">
@@ -191,13 +214,16 @@ const providerColors: Record<string, string> = {
                     </div>
 
                     <!-- Summary after all done -->
-                    <div v-if="allDone && results.length > 0" class="mt-4 rounded-xl bg-[#007aff]/5 p-3.5 dark:bg-[#007aff]/10">
+                    <div v-if="allDone && results.length > 0" class="mt-4 rounded-xl p-3.5" :class="webSearch ? 'bg-[#34c759]/5 dark:bg-[#34c759]/10' : 'bg-[#007aff]/5 dark:bg-[#007aff]/10'">
                         <p class="text-[13px] leading-[1.5] text-[#1d1d1f] dark:text-[#f5f5f7]">
                             <strong>{{ results.filter(r => r.status === 'done' && isCorrect(parseResponse(r.response).verdict)).length }}</strong> von
                             <strong>{{ results.filter(r => r.status === 'done').length }}</strong> Modellen lagen richtig.
-                            {{ results.filter(r => r.status === 'done' && isCorrect(parseResponse(r.response).verdict)).length === results.filter(r => r.status === 'done').length
-                                ? 'Alle einig — aber das heißt nicht, dass sie immer recht haben.'
-                                : 'Verschiedene Modelle, verschiedene Meinungen. Genau deshalb ist menschliche Einordnung wichtig.' }}
+                            <template v-if="webSearch">
+                                Mit Web-Zugang steigt die Konfidenz — KI-Agenten sind stärker, wenn sie Werkzeuge haben. Genau wie Menschen.
+                            </template>
+                            <template v-else>
+                                Ohne Internet raten selbst die besten Modelle. Im nächsten Schritt geben wir ihnen Web-Zugang.
+                            </template>
                         </p>
                     </div>
                 </div>

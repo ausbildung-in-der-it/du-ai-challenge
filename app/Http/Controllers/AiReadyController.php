@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Laravel\Cashier\Cashier;
 
@@ -10,12 +11,16 @@ class AiReadyController extends Controller
 {
     public function index()
     {
+        Log::info('AiReadyController@index');
+
         return Inertia::render('AiReady');
     }
 
     public function checkout()
     {
         $priceId = config('services.stripe.ai_ready_price_id');
+
+        Log::info('AiReadyController@checkout', ['price_id' => $priceId]);
 
         $session = Cashier::stripe()->checkout->sessions->create([
             'line_items' => [[
@@ -41,6 +46,8 @@ class AiReadyController extends Controller
     {
         $sessionId = $request->query('session_id');
 
+        Log::info('AiReadyController@success', ['has_session_id' => (bool) $sessionId]);
+
         if (! $sessionId) {
             return redirect()->route('ai-ready');
         }
@@ -51,7 +58,9 @@ class AiReadyController extends Controller
             if ($session->payment_status !== 'paid') {
                 return redirect()->route('ai-ready');
             }
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            Log::error('AiReadyController@success: failed to retrieve Stripe session', ['error' => $e->getMessage()]);
+
             return redirect()->route('ai-ready');
         }
 
